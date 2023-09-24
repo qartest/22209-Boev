@@ -6,7 +6,10 @@
 #include <map>
 #include <list>
 
+
 using namespace std;
+template<typename Iterator>
+using IteratorPair = map <string, unsigned long> :: iterator;
 
 class WordCount{
 
@@ -27,54 +30,58 @@ class WordCounter{
 
 private:
     unsigned long all_worlds = 0;
-
-    std::string start_line;   
+ 
     list <WordCount> listok;
     
+    map <string, unsigned long> book;
+
+
+    void AppendWord(unsigned long start, unsigned long end, string s){
+        if (end != start){
+            string now = s.substr(start, end - start);
+
+            bool CF = book.insert(make_pair(now, 1)).second;
+            map <string, unsigned long> :: iterator Check = book.insert(make_pair(now, 1)).first;
+            if(!CF){
+                (Check -> second)++;
+            }
+            all_worlds++;
+        }
+    }
 
 public:
-    void OpenFile(string input){
+    int OpenFile(string input){
 
         std::ifstream file_in(input);
         if (!file_in.is_open()){
             cout << "Input file did not find";
-            exit(1);
+            return 0;
         }
+
         string s;
-        while(getline(file_in, s, '\n')){           
-            start_line.append(s);
-            start_line.append(" ");
+
+        while(getline(file_in, s, '\n')){   
+            unsigned long start = 0;
+            for (unsigned long i = 0; (i < s.size()); ++i){
+                if (!(((s[i] >= '0') && (s[i] <= '9')) || ((s[i] >= 'a') && (s[i] <= 'z')) || ((s[i] >= 'A') && (s[i] <= 'Z')))){
+                    AppendWord(start, i, s);
+                    start = i+1;
+                }
+            }
+            if (start < s.size()- 1){
+                AppendWord(start, s.size(), s);
+            }
+
         }
+        
         file_in.close();
+        return 1;
     }
 
     void CountWords(){
 
-        map <string, unsigned long> book;
-        map <string, unsigned long> :: iterator it_book;
-        string now;
-        unsigned long start = 0;
-
-        for (unsigned long i = 0; (i < start_line.size()) && (start_line[i] != '\0'); ++i){
-            if (!(((start_line[i] >= '0') && (start_line[i] <= '9')) || ((start_line[i] >= 'a') && (start_line[i] <= 'z')) || ((start_line[i] >= 'A') && (start_line[i] <= 'Z')))){
-                if (i != start){
-                    now = start_line.substr(start, i - start);
-                    it_book = book.find(now);
-                    if (it_book == book.end()){
-                        book.insert(make_pair(now, 1));
-                    }
-                    else {
-                        book[now]++;
-                    }
-                    all_worlds++;
-                }
-                start = i+1;
-            }
-            
-        }
-
         WordCount word_argument;
-        it_book = book.begin();
+        map <string, unsigned long> :: iterator it_book = book.begin();
 
         for(; it_book != book.end(); ++it_book){
             word_argument.world = it_book -> first;
@@ -85,13 +92,13 @@ public:
         listok.sort();
     }
 
-    void WriteAnswers(string output){
+    int WriteAnswers(string output){
 
         std::fstream file_out(output);
 
         if (!file_out.is_open()){
             cout << "Out file did not find";
-            exit(1);
+            return 0;
         }
 
         list <WordCount> :: iterator list_it = listok.begin();
@@ -100,15 +107,25 @@ public:
             file_out << list_it -> world << ", " << list_it -> value << ", " << (float)((list_it -> value) * 100 / (float)all_worlds) << "%" << endl;
         }
         file_out.close();
-
+        return 1;
     }
 };
 
 int main(int argc, char* argv[]){
-
+    
+    // if (argc != 3){
+    //     std::cout << "Bad input";
+    //     return 1;
+    // }
+    string c = "C:\\Projects\\First\\build\\input.txt";
+    string v = "C:\\Projects\\First\\build\\output.csv";
     WordCounter WC;
-    WC.OpenFile(string(argv[1]));
+    if (WC.OpenFile(c) == 0){
+        return 1;
+    }
     WC.CountWords();
-    WC.WriteAnswers(string(argv[2]));
+    if (WC.WriteAnswers(v) == 0){
+        return 1;
+    }
 
 }
