@@ -8,8 +8,6 @@
 
 
 using namespace std;
-template<typename Iterator>
-using IteratorPair = map <string, unsigned long> :: iterator;
 
 class WordCount{
 
@@ -113,18 +111,17 @@ public:
 
 int main(int argc, char* argv[]){
     
-    // if (argc != 3){
-    //     std::cout << "Bad input";
-    //     return 1;
-    // }
-    string c = "C:\\Projects\\First\\build\\input.txt";
-    string v = "C:\\Projects\\First\\build\\output.csv";
+     if (argc != 3){
+         std::cout << "Bad input";
+         return 1;
+     }
+
     WordCounter WC;
-    if (WC.OpenFile(c) == 0){
+	if (WC.OpenFile(string(argv[1])) == 0){
         return 1;
     }
     WC.CountWords();
-    if (WC.WriteAnswers(v) == 0){
+	if (WC.WriteAnswers(string(argv[2])) == 0){
         return 1;
     }
 
