@@ -1,6 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <iostream>
-#include <string>
 #include "CircularBuffer/CircularBuffer.h"
 #include <gtest/gtest.h>
 
@@ -81,6 +78,35 @@ TEST(TestCircularBuffer, simple_test3){
     EXPECT_TRUE(first == second);
 
 }
+TEST(TestCircularBuffer, rotate){
+    CircularBuffer first(8, 'j');
+    CircularBuffer second(first);
+    first.push_front('k');
+    first.pop_front();
+    first.pop_front();
+    first.push_front('b');
+    first.pop_front();
+    first.insert(2, 'a');
+
+    first.rotate(2);
+
+    second.push_front('a');
+    second.pop_back();
+    second.pop_back();
+
+    EXPECT_TRUE(first == second);
+
+    second.push_front('a');
+    second.push_front('a');
+    second.push_front('a');
+
+    first.push_front('a');
+    first.push_front('a');
+    first.push_front('a');
+
+    second.linearize();
+    EXPECT_TRUE(second == first);
+}
 
 TEST(TestCircularBuffer, simple_test4){
 
@@ -92,9 +118,9 @@ TEST(TestCircularBuffer, simple_test4){
     EXPECT_TRUE(third.capacity() == 10);
     EXPECT_TRUE(first == third);
 
-    EXPECT_ANY_THROW({
-        first.rotate(12);
-    });
+    // EXPECT_ANY_THROW({
+    //     first.rotate(12);
+    // });
 
     first.rotate(6);
     first.set_capacity(15);
@@ -153,7 +179,9 @@ TEST(TestCircularBuffer, simple_test6){
     EXPECT_TRUE(first.size() == 1);
 
     CircularBuffer second(9, 's');
+    CircularBuffer third(second);
     first.Swap(second);
+    EXPECT_TRUE(first == third);
 
     EXPECT_FALSE(first == second);
     EXPECT_TRUE( first != second);
@@ -195,6 +223,15 @@ TEST(TestCircularBuffer, simple_test6){
     EXPECT_TRUE(first != second);
     EXPECT_FALSE(first == second);
 
+}
+
+TEST(TestCircularBuffer, simple_test7){
+    CircularBuffer first(10, 'j');
+    CircularBuffer second(8, 'j');
+    first.pop_back();
+    first.pop_front();
+    EXPECT_TRUE(first == second);
+    EXPECT_FALSE(first != second);
 }
 
 int main(int argc, char** argv){

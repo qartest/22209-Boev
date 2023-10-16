@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #pragma once
 
 typedef char value_type;
@@ -6,13 +5,22 @@ typedef char value_type;
 class CircularBuffer {
 
 	value_type * buffer;
-	int my_capacity;
-	int inventory;
+	int capacity_;
+	int size_;
 	int begin;
 	int end;
 
 public:
 
+	friend void swap(value_type & first, value_type & second){
+		value_type now = first;
+		first = second;
+		second = now;
+	}
+	friend void swap(CircularBuffer & first, CircularBuffer& second){
+		CircularBuffer now = first;
+
+	}
 
 	CircularBuffer();
 
