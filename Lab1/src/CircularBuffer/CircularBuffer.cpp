@@ -15,8 +15,8 @@ namespace {
 
 
 CircularBuffer::CircularBuffer() {
-	buffer = new value_type[1];
-	capacity_ = 1;
+	buffer = NULL;
+	capacity_ = 0;
 	begin = 0;
 	end = 0;
 	size_ = 0;
@@ -35,7 +35,9 @@ CircularBuffer::CircularBuffer(int capacity) {
 
 
 CircularBuffer :: ~CircularBuffer() {
-	delete[](buffer);
+	if(buffer != NULL){
+		delete[](buffer);
+	}
 }
 
 CircularBuffer::CircularBuffer(const CircularBuffer & cb) {
@@ -240,7 +242,12 @@ void CircularBuffer::resize(int new_size, const value_type & item = value_type()
 		}
 		if (item == value_type()) {
 			size_ = new_size_;
-			end = new_size_ - 1;
+			if(size_ != 0){
+				end = new_size_ - 1;
+			}
+			else{
+				end = 0;
+			}
 		}
 		else{
 			size_ = new_size;
@@ -253,7 +260,9 @@ void CircularBuffer::resize(int new_size, const value_type & item = value_type()
 	capacity_ = new_size;
 	value_type * for_delete = buffer;
 	buffer = new_buffer;
-	operator delete[](for_delete);
+	if (for_delete != NULL){
+		delete[](for_delete);
+	}
 
 }
 

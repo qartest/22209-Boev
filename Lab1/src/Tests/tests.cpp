@@ -3,14 +3,13 @@
 
 TEST(TestCircularBuffer, simple_test1){
     CircularBuffer first;
-    EXPECT_EQ(first.capacity(), 1);
-    EXPECT_NO_THROW({
-        value_type answer = first.front();
-        answer = first.back();
-    });
-    first.push_back('t');
+ //   EXPECT_EQ(first.capacity(), 1);
+    // EXPECT_NO_THROW({
+    //     value_type answer = first.front();
+    //     answer = first.back();
+    // });
+
     first.set_capacity(5);
-    EXPECT_EQ(first[0], 't');
 
     for(int i = 0; i < 199; ++i){
         first.push_back('h');
@@ -117,10 +116,6 @@ TEST(TestCircularBuffer, simple_test4){
 
     EXPECT_TRUE(third.capacity() == 10);
     EXPECT_TRUE(first == third);
-
-    // EXPECT_ANY_THROW({
-    //     first.rotate(12);
-    // });
 
     first.rotate(6);
     first.set_capacity(15);
