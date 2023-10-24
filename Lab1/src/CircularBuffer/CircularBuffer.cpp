@@ -2,13 +2,13 @@
 #include <stdexcept>
 #include "CircularBuffer.h"
 
-namespace Function{
+namespace {
 
-	int SavePlus(int digit, int capacity, int plus) {
+	int PlusIndexInBuffer(int digit, int capacity, int plus) {
 		return (digit + plus) % capacity;
 	}
 
-	int SaveMinus(int digit, int capacity) {
+	int MinusIndexInBuffer(int digit, int capacity) {
 		return ((capacity - 1) * (digit == 0) + (digit != 0) * (digit - 1)) % capacity;
 	}
 }
@@ -35,7 +35,7 @@ CircularBuffer::CircularBuffer(int capacity) {
 
 
 CircularBuffer :: ~CircularBuffer() {
-	operator delete[](buffer);
+	delete[](buffer);
 }
 
 CircularBuffer::CircularBuffer(const CircularBuffer & cb) {
@@ -63,18 +63,18 @@ CircularBuffer::CircularBuffer(int capacity, const value_type & elem) : Circular
 }
 
 value_type & CircularBuffer :: operator[](int i) {
-	return buffer[Function::SavePlus(begin, capacity_, i)];
+	return buffer[PlusIndexInBuffer(begin, capacity_, i)];
 }
 
 const value_type & CircularBuffer :: operator[](int i) const {
-	return buffer[Function::SavePlus(begin, capacity_, i)];
+	return buffer[PlusIndexInBuffer(begin, capacity_, i)];
 }
 
 
 value_type & CircularBuffer::at(int i) {
 
 	if (i < size_) {
-		return buffer[Function::SavePlus(begin, capacity_, i)];
+		return buffer[PlusIndexInBuffer(begin, capacity_, i)];
 	}
 	else {
 		throw std::out_of_range("Invalid Index");
@@ -84,7 +84,7 @@ value_type & CircularBuffer::at(int i) {
 const value_type & CircularBuffer::at(int i) const {
 
 	if (i < size_) {
-		return buffer[Function::SavePlus(begin, capacity_, i)];
+		return buffer[PlusIndexInBuffer(begin, capacity_, i)];
 	}
 	else {
 		throw std::out_of_range("Invalid Index");
@@ -114,13 +114,13 @@ void CircularBuffer::push_back(const value_type & item = value_type()) {
 		}
 
 		if (size_ != 1) {
-			end = Function::SavePlus(end, capacity_, 1);
+			end = PlusIndexInBuffer(end, capacity_, 1);
 		}
 
 		buffer[end] = item;
 
 		if ((end == begin) && (size_ == capacity_)) {
-			begin = Function::SavePlus(begin, capacity_, 1);
+			begin = PlusIndexInBuffer(begin, capacity_, 1);
 		}
 	}
 
@@ -129,7 +129,7 @@ void CircularBuffer::push_back(const value_type & item = value_type()) {
 void CircularBuffer::push_front(const value_type & item = value_type()) {
 	if (capacity_ > 0) {
 		if (size_ != 0) {
-			begin = Function::SaveMinus(begin, capacity_);
+			begin = MinusIndexInBuffer(begin, capacity_);
 		}
 
 		buffer[begin] = item;
@@ -139,7 +139,7 @@ void CircularBuffer::push_front(const value_type & item = value_type()) {
 		}
 
 		if ((begin == end) && (size_ == capacity_)) {
-			end = Function::SaveMinus(end, capacity_);
+			end = MinusIndexInBuffer(end, capacity_);
 		}
 	}
 
@@ -149,14 +149,14 @@ void CircularBuffer::push_front(const value_type & item = value_type()) {
 
 void CircularBuffer::pop_back() {
 	if (size_ > 0) {
-		end = Function::SaveMinus(end, capacity_);
+		end = MinusIndexInBuffer(end, capacity_);
 		--size_;
 	}
 }
 
 void CircularBuffer::pop_front() {
 	if (size_ > 0) {
-		begin = Function::SavePlus(begin, capacity_, 1);
+		begin = PlusIndexInBuffer(begin, capacity_, 1);
 		--size_;
 	}
 }
@@ -216,7 +216,7 @@ void CircularBuffer::resize(int new_size, const value_type & item = value_type()
 
 	if (new_size < size_) {
 
-		for (int i = end, k = new_size - 1; (i != begin) && (k > -1); i = Function::SaveMinus(i, capacity_), k--) {
+		for (int i = end, k = new_size - 1; (i != begin) && (k > -1); i = MinusIndexInBuffer(i, capacity_), k--) {
 			new_buffer[k] = buffer[i];
 			new_size_++;
 		}
@@ -226,7 +226,7 @@ void CircularBuffer::resize(int new_size, const value_type & item = value_type()
 	else {
 		if(size_ != 0){
 
-			for (int k = 0, i = begin; i != end; k++,  i = Function::SavePlus(i, capacity_, 1)) {
+			for (int k = 0, i = begin; i != end; k++,  i = PlusIndexInBuffer(i, capacity_, 1)) {
 				new_buffer[k] = buffer[i];
 				new_size_++;
 			}
@@ -275,7 +275,7 @@ CircularBuffer & CircularBuffer :: operator=(const CircularBuffer & cb) {
 	return *this;
 }
 
-void CircularBuffer::Swap(CircularBuffer & cb) {
+void CircularBuffer::swap(CircularBuffer & cb) {
 	std::swap(size_, cb.size_);
 	std::swap(begin, cb.begin);
 	std::swap(end, cb.end);
@@ -319,14 +319,15 @@ bool CircularBuffer :: operator==(const CircularBuffer & a) {
 	if (size_ != a.size_) {
 		return false;
 	}
-	int k = a.begin, m = begin;
+	int now_buffer_a = a.begin;
+	int now_buffer_this = begin;
 	for(int i = 0; i < size_; ++i){
 
-		if (buffer[m] != a.buffer[k]) {
+		if (buffer[now_buffer_this] != a.buffer[now_buffer_a]) {
 			return false;
 		}
-		k = Function::SavePlus(k, a.capacity_, 1);
-		m = Function::SavePlus(m, capacity_, 1);
+		now_buffer_a  = PlusIndexInBuffer(now_buffer_a, a.capacity_, 1);
+		now_buffer_this  = PlusIndexInBuffer(now_buffer_this , capacity_, 1);
 	}
 	return true;
 

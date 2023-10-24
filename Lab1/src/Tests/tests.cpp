@@ -180,7 +180,7 @@ TEST(TestCircularBuffer, simple_test6){
 
     CircularBuffer second(9, 's');
     CircularBuffer third(second);
-    first.Swap(second);
+    first.swap(second);
     EXPECT_TRUE(first == third);
 
     EXPECT_FALSE(first == second);

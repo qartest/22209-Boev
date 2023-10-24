@@ -12,16 +12,6 @@ class CircularBuffer {
 
 public:
 
-	friend void swap(value_type & first, value_type & second){
-		value_type now = first;
-		first = second;
-		second = now;
-	}
-	friend void swap(CircularBuffer & first, CircularBuffer& second){
-		CircularBuffer now = first;
-
-	}
-
 	CircularBuffer();
 
 	CircularBuffer(int capacity);
@@ -78,7 +68,7 @@ public:
 
 	CircularBuffer & operator=(const CircularBuffer & cb);
 
-	void Swap(CircularBuffer & cb);
+	void swap(CircularBuffer & cb);
 
 	void insert(int pos, const value_type & item);
 
