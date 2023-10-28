@@ -15,7 +15,7 @@ namespace {
 
 
 CircularBuffer::CircularBuffer() {
-	buffer = NULL;
+	buffer = nullptr;
 	capacity_ = 0;
 	begin = 0;
 	end = 0;
@@ -34,8 +34,8 @@ CircularBuffer::CircularBuffer(int capacity) {
 }
 
 
-CircularBuffer :: ~CircularBuffer() {
-	if(buffer != NULL){
+CircularBuffer::~CircularBuffer() {
+	if(buffer){
 		delete[](buffer);
 	}
 }
@@ -64,11 +64,11 @@ CircularBuffer::CircularBuffer(int capacity, const value_type & elem) : Circular
 
 }
 
-value_type & CircularBuffer :: operator[](int i) {
+value_type & CircularBuffer::operator[](int i) {
 	return buffer[PlusIndexInBuffer(begin, capacity_, i)];
 }
 
-const value_type & CircularBuffer :: operator[](int i) const {
+const value_type & CircularBuffer::operator[](int i) const {
 	return buffer[PlusIndexInBuffer(begin, capacity_, i)];
 }
 
@@ -260,7 +260,7 @@ void CircularBuffer::resize(int new_size, const value_type & item = value_type()
 	capacity_ = new_size;
 	value_type * for_delete = buffer;
 	buffer = new_buffer;
-	if (for_delete != NULL){
+	if (for_delete){
 		delete[](for_delete);
 	}
 
@@ -270,7 +270,7 @@ void CircularBuffer::set_capacity(int new_capacity) {
 	resize(new_capacity, value_type());
 }
 
-CircularBuffer & CircularBuffer :: operator=(const CircularBuffer & cb) {
+CircularBuffer & CircularBuffer::operator=(const CircularBuffer & cb) {
 	value_type * for_delete = buffer;
 	buffer = new value_type[cb.capacity_];
 	capacity_ = cb.capacity_;
@@ -324,7 +324,7 @@ void CircularBuffer::erase(int first, int last) {
 	}
 }
 
-bool CircularBuffer :: operator==(const CircularBuffer & a) {
+bool CircularBuffer::operator==(const CircularBuffer & a) {
 	if (size_ != a.size_) {
 		return false;
 	}
@@ -342,6 +342,6 @@ bool CircularBuffer :: operator==(const CircularBuffer & a) {
 
 }
 
-bool CircularBuffer :: operator!=(const CircularBuffer & a) {
+bool CircularBuffer::operator!=(const CircularBuffer & a) {
 	return !(*this == a);
 }
