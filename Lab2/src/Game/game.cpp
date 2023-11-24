@@ -1,30 +1,84 @@
 #include "game.hpp"
 
-
-int Game :: SaveStep(int coord, int step, int capacity){
-        return (coord + step) < 0? (coord + capacity + step) % capacity : (coord + step) % capacity;
-    }
-
-int Game :: NumberCell(int coord_x, int coord_y){
-        return size_x_ * coord_y + coord_x;
-    }
-
 Game::Game(int size_x, int size_y){
     size_x_ = size_x;
     size_y_ = size_y;
-    int size = size_x_ * size_y_;
-
-    mapNew_ = (char*)calloc(size, sizeof(char));
-    mapOld_ = (char*)calloc(size, sizeof(char));
-
-    rule_s = std::vector<int>();
-    rule_b = std::vector<int>();
 
 }
 
-Game :: ~Game(){
-    delete(mapNew_);
-    delete(mapOld_);
+
+std::vector<char> Game :: GiveMap(){
+    return map_;
+}
+
+int Game :: GiveSizeX(){
+    return size_x_;
+}
+
+int Game :: GiveSizeY(){
+    return size_y_;
+}
+void Game :: TakeCell(int place){
+    map_[place] = 1;
+}
+ void Game :: GiveZeroMap(int number){
+    for (int i = 0; i < number; ++i){
+        map_.push_back(0);
+    }
+ }
+
+int Game::GiveSizeRulers(){
+    return rule_s.size();
+}
+bool Game:: GiveBorn(int number){
+    return rule_b[number];
+}
+bool Game :: GiveSurval(int number){
+    return rule_s[number];
+}
+void Game :: TakeSurval(int number){
+    if (number < rule_s.size()){
+        rule_s[number] = 1;
+    }
+}
+
+void Game :: TakeBorn(int number){
+    if (number < rule_b.size()){
+        rule_b[number] = 1;
+    }
+}
+bool Game :: LiveOfCell(int number){
+    if (map_[number] == 1){
+        return true;
+    }
+    return false;
+}
+
+void Game :: TakeX(int x){
+    size_x_ = x;
+}
+
+void Game :: TakeY(int y){
+    size_y_ = y;
+}
+
+void Game:: RecountSize(int x, int y){
+    std::vector<char> new_map(y * x);
+
+    for (int i = 0; i < y * x; ++i){
+        new_map[i] = 0;
+    }
+
+    for (int i = 0; ((i < size_y_) && (i < y)); ++i){
+        for (int j = 0; ((j < size_x_) && (j < x)); ++j){
+            int new_map_cell = Functions::NumberCell(j, i, x);
+            int old_map_cell = Functions::NumberCell(j, i, size_x_);
+           new_map[Functions::NumberCell(j, i, x)] = map_[Functions::NumberCell(j, i, size_x_)];
+        }
+    }
+    map_ = new_map;
+    size_x_ = x;
+    size_y_ = y;
 }
 
 bool Game :: CheckOnePixel(int coord_x, int coord_y){
@@ -32,40 +86,37 @@ bool Game :: CheckOnePixel(int coord_x, int coord_y){
     for (int i = -1; i < 2; ++i){
         for (int j = -1; j < 2; ++j){
             if ((j!= 0) || (i != 0)){
-                int place_x = SaveStep(coord_x, j, size_x_);
-                int place_y = SaveStep(coord_y, i, size_y_);
-                if (mapOld_[NumberCell(place_x, place_y)] == 1){
+                int place_x = Functions::SaveStep(coord_x, j, size_x_);
+                int place_y = Functions::SaveStep(coord_y, i, size_y_);
+                if (map_[Functions::NumberCell(place_x, place_y, size_x_)] == 1){
                     allLife++;
                 }
             }
         }
     }
-    bool check = (rule_b.end() != std::find(rule_b.begin(), rule_b.end(), allLife));
-    if (check){
-        return true;
-    }
-    check = (rule_s.end() != std::find(rule_s.begin(), rule_s.end(), allLife));
-    if (check && (mapOld_[NumberCell(coord_x, coord_y)] == 1)){
-        return true;
+    if (allLife < 8){
+        if (rule_b[allLife] == 1){
+            return true;
+        }
+        if ((rule_s[allLife] == 1) && (map_[Functions::NumberCell(coord_x, coord_y, size_x_)] == 1)){
+            return true;
+        }
     }
     return false;
-    
 }
 
 void Game :: RecountMap(){
+    std::vector<char> new_map(size_y_ * size_x_);
     for (int i = 0; i < size_y_; ++i){
         for (int j = 0; j < size_x_; ++j){
-            int k = CheckOnePixel(j, i);
+            int place = Functions::NumberCell(j, i, size_x_);
             if(CheckOnePixel(j, i)){
-                mapNew_[NumberCell(j, i)] = 1;
+                new_map[Functions::NumberCell(j, i, size_x_)] = 1;
             }
             else{
-                mapNew_[NumberCell(j, i)] = 0;
+                new_map[Functions::NumberCell(j, i, size_x_)] = 0;
             }
         }
     }
-}
-
-void Game :: SwapMap(){
-    std::swap(mapNew_, mapOld_);
+    map_ = new_map;
 }

@@ -1,17 +1,14 @@
 #pragma once
-
+#include "../Game/game.hpp"
 
 class Interface{
 
-    int size_x_;
-    int size_y_;
-
 public: 
     Interface() = default;
-    Interface(int size_x, int size_y);
     ~Interface() = default;
-    void Output(char* map);
+    void Output(Game game);
     int Analyze(std::string input);
     void PrintError(char error);
     void PrintText(char type);
+    void Show(int amount, Game& game);
 };

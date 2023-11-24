@@ -1,34 +1,48 @@
 #pragma once
 
 #include <memory>
-#include<vector>
+#include <vector>
 #include <algorithm> 
-
+#include <bitset>
+#include "../Functions/Function.hpp"
 
 class Game{
 
-private:
-    bool CheckOnePixel(int coord_x, int coord_y);
-
 public:
+    std::vector<char> GiveMap();
+    void GiveZeroMap(int number);
+    void RecountMap();
+    void RecountSize(int x, int y);
+
+    int GiveSizeX();
+    int GiveSizeY();
+    void TakeX(int x);
+    void TakeY(int y);
+
+    void TakeCell(int place);
+    bool LiveOfCell(int number);
+
+    int GiveSizeRulers();
+    bool GiveSurval(int number);
+    bool GiveBorn(int number);
+    void TakeSurval(int number);
+    void TakeBorn(int number);
+
     Game() = default;
     Game(int size_x, int size_y);
-    ~Game();
+    ~Game() = default;
 
-protected:
 
-    int SaveStep(int coord, int step, int capacity);
-    int NumberCell(int coord_x, int coord_y);
-    void SwapMap();
-    void RecountMap();
+private:
 
-    char* mapOld_;
-    char* mapNew_;
+    std::vector<char> map_;
 
-    std::vector<int> rule_s;
-    std::vector<int> rule_b;
+    std::bitset <8> rule_s;
+    std::bitset <8> rule_b;
 
     int size_x_;
     int size_y_;
+
+    bool CheckOnePixel(int coord_x, int coord_y);
 
 };

@@ -2,39 +2,44 @@
 
 #include <string>
 #include "../Example/example.hpp"
-#include "../Game/game.hpp"
 #include "../Interface/interface.hpp"
 
-class Controller : public Game{
+class Controller{
 
     std::string name;
     char error;
     std::string name_of_root;
     int repeat_of_iteration;
 
+    public:
+    void MakeError(char input);
+
     private:
 
     void SaveNameOfRoot(char* input);
-    void Read(std::fstream file_in);
-    void ReadCell(std::string input_line);
-    void ReadName(std::string input_line);
-    void Open(std::string address);
-    void Save(std::string name);
-    void Write(std::ofstream output, std::string name);
-    void Show(Interface out, int amount);
-    int GiveDigit(std::string int_string);
-    void ShowError(Interface output);
-    void Run();
 
-    int PreRun(char * argv[], int argc);
+    void Read(std::fstream file_in, Game& game);
+    int ReadCell(std::string input_line, Game& game);
+    void ReadName(std::string input_line, Game& game);
+
+    void Open(std::string address, Game& game);
+
+    void Save(std::string name, Game& game);
+    void Write(std::ofstream output, std::string name, Game& game);
+
+    void Show(Interface out, int amount, Game& game);
+    void ShowError(Interface output);
+
+    void Run(Game& game);
+    int PreRun(char * argv[], int argc, Game& game);
     int Analiz(std::string input);
+
+    int SizeParser(int *x, int *y, std::string input);
+    void RecountSize(int x, int y, Game game);
+    
     public:
 
-    void Start(int argc, char * argv[]); 
-    
-    char* GiveMap();
-
+    void Start(int argc, char * argv[], Game& game); 
     Controller();
-    Controller(int size_x, int size_y);
     ~Controller() = default;
 };

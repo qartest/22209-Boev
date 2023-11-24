@@ -1,26 +1,64 @@
 #include <iostream>
+#include <vector>
+#include <unistd.h>
 #include "interface.hpp"
 
-
-Interface::Interface(int size_x, int size_y){
-    size_x_ = size_x;
-    size_y_ = size_y;
+namespace
+{
+void TopOutput(int size_x){
+    for (int i = 0; i <= size_x + 1; ++i){
+        std::cout << '_';
+    }
+    std::cout << std::endl;
 }
 
-void Interface::Output(char * map){
-    int size = size_x_ * size_y_;
+void BottonOutput(int size_x){
+    std::cout  << '|';
+    for (int i = 1; i <= size_x; ++i){
+        std::cout << '_';
+    }
+    std::cout  << '|';
+    std::cout << std::endl;
+}
+}
+
+void Interface::Output(Game game){
+
+    int size_x_ = game.GiveSizeX();
+    int size_y_ = game.GiveSizeY();
+
+    std::vector<char> input = game.GiveMap();
+
     std :: cout << std::endl;
-    for(int i = 0; i < size; ++i){
-        if (map[i] == 1){
-            std:: cout << (char)42;
+    std :: cout << "Print help, if you don't know commands" << std::endl;
+    TopOutput(size_x_); 
+
+    for (int j = 0; j < size_y_; ++j){
+        std::cout << '|';
+        for (int i = 0; i < size_x_; ++i){
+            if(input[j * size_x_ + i] == 1){
+                std:: cout << (char)42;
+            }
+            else{
+                std::cout << ' ';
+            } 
         }
-        else{
-            std:: cout << ' ';
-        }
-        
-        if (((i + 1) % size_x_ == 0) && ((i + 1) < size)){
-            std :: cout << std::endl;
-        }
+        std::cout << '|';
+        std :: cout << std::endl;
+    }
+    BottonOutput(size_x_);
+}
+
+void Interface :: Show(int amount, Game& game){
+    std::cout << "\033c";
+    Output(game);
+    for(int i = 0; i < amount; ++i){
+        game.RecountMap();
+        usleep(100000);
+        std::cout << "\033c";
+        Output(game);
+        std::cout << std::endl;
+        std::cout << "All Okey!!!" << std::endl;
     }
 }
 
@@ -34,7 +72,9 @@ int Interface:: Analyze(std::string input){
             return 1;
         }
         else if(comand == "tick"){
-
+            if (input.size() < 6){
+                return -1;
+            }
             return 2;
         }
         else if(comand == "exit"){
@@ -42,6 +82,12 @@ int Interface:: Analyze(std::string input){
         }
         else if(comand == "help"){
            return 4;
+        }
+        else if (comand == "size"){
+            if (input.size() < 8){
+                return -1;
+            }
+            return 5;
         }
     }
     return -1;

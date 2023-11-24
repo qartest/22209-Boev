@@ -1,45 +1,47 @@
 #include "controller.hpp"
-#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <filesystem>
-#include <unistd.h>
 #include <cstdlib>
+#include <iostream>
 
-
-Controller :: Controller() : Controller(100, 100){}
-
-Controller :: Controller(int size_x, int size_y) : Game(size_x, size_y){
+Controller :: Controller(){
     name = " ";
     name_of_root = "";
     error = '\0';
     repeat_of_iteration = -1;
 }
 
+void Controller :: MakeError(char input){
+    error = input;
+}
 
-char* Controller::GiveMap(){
-    return mapNew_;
+int Controller :: SizeParser(int *x, int *y, std::string input){
+    std::vector<std::string> digits;
+    std::stringstream ss (input);
+    std::string tmp;
+    while(std::getline(ss, tmp, ' ')){
+        digits.push_back(tmp);
+    }
+    if (digits.size() < 2){
+        return -1;
+    }
+
+    *x = Functions::GiveDigit(digits[0]);
+    *y = Functions::GiveDigit(digits[1]);
+    
+    if (*y == -1 || *x == -1){
+        return -1;
+    }
+    return 0;
 }
 
 void Controller :: ShowError(Interface output){
     output.PrintError(error);
     error = '\0';
 }
-int Controller :: GiveDigit(std::string int_string){
-    int digit = -1;
-    for(int j = 0; j < int_string.size(); ++j){
-        if(isdigit(int_string[j])){
-            digit = ((digit + (digit == -1)) * 10) + (int_string[j]- '0');
-        }
-        else{
-            error = 'd';
-            break;
-        }
-    }
-    return digit;    
-}
 
-void Controller :: ReadCell(std::string input_line){
+int Controller :: ReadCell(std::string input_line, Game& game){
     int coords[] = {-1, -1};
     std::stringstream stream_digits(input_line);
     std :: string digit;
@@ -57,14 +59,15 @@ void Controller :: ReadCell(std::string input_line){
     }
     
     if ((coords[0] > -1) && (coords[1] > -1)){
-        int place_x = SaveStep(0, coords[0], size_x_);
-        int place_y = SaveStep(0, coords[1], size_y_);
-        mapNew_[NumberCell(place_x, place_y)] = 1;
-    }    
+        int place_x = Functions::SaveStep(0, coords[0], game.GiveSizeX());
+        int place_y = Functions::SaveStep(0, coords[1], game.GiveSizeY());
+        return Functions::NumberCell(place_x, place_y, game.GiveSizeX());
+    } 
+    return -1;  
 
 }
 
-void Controller :: ReadName(std::string input_line){
+void Controller :: ReadName(std::string input_line, Game& game){
 
     for (int i = 0; i < input_line.size(); ++i){
         if (input_line[i] == 'N'){
@@ -76,14 +79,14 @@ void Controller :: ReadName(std::string input_line){
                     break;
                 }
                 if (isdigit(input_line[i])){
-                    rule_b.push_back(input_line[i] - '0');
+                    game.TakeBorn(input_line[i] - '0');
                 }
             }
         }
         if (input_line[i] == 'S'){
             for(;i< input_line.size(); ++i){
                 if (isdigit(input_line[i])){
-                    rule_s.push_back(input_line[i] - '0');
+                    game.TakeSurval(input_line[i] - '0');
                 }
             }
         }
@@ -92,7 +95,7 @@ void Controller :: ReadName(std::string input_line){
 }
 
 
-void Controller :: Read(std::fstream file_in){
+void Controller :: Read(std::fstream file_in, Game& game){
     std::string input_line;
 
     while(getline(file_in, input_line, '\n')){
@@ -100,65 +103,78 @@ void Controller :: Read(std::fstream file_in){
             break;
         }
         if(input_line[0] != '#'){
-            ReadCell(input_line);
+            int size_of_map = game.GiveMap().size();
+            int number_of_cell = ReadCell(input_line, game);
+            if (number_of_cell != -1){
+                if (number_of_cell >= size_of_map){
+                    game.GiveZeroMap(number_of_cell - size_of_map + 1);
+                }
+                game.TakeCell(number_of_cell);
+            }
         }
         else{
-            ReadName(input_line);
+            ReadName(input_line, game);
         }
     }
+    game.GiveZeroMap(game.GiveSizeX() * game.GiveSizeY() - game.GiveMap().size());
 }
 
-void Controller :: Open(std::string address){
+void Controller :: Open(std::string address, Game& game){
 
     std::fstream file_in(address);
     if (file_in){
-        Read(std::fstream (address));
+        Read(std::fstream (address), game);
     }
     else{
         error = 'f';
     }
 }
 
-void Controller :: Write(std::ofstream output, std::string name){
+void Controller :: Write(std::ofstream output, std::string name, Game& game){
     output << "#Life 1.06" << std::endl;
     output << "#N " << name << std::endl;
     output << "#R B";
-    for (int i = 0; i < rule_b.size(); ++i){
-        output << std::to_string(rule_b[i]);
+    int size_rule = game.GiveSizeRulers();
+    for (int i = 0; i < size_rule; ++i){
+            if (game.GiveSurval(i)){
+                output << std::to_string(i);
+        }
     }
     output << "/S";
-    for (int i = 0; i < rule_s.size(); ++i){
-        output << std::to_string(rule_s[i]);
+    for (int i = 0; i < size_rule; ++i){
+        if (game.GiveBorn(i)){
+            output << std::to_string(i);
+        }
     }
     output << std::endl;
 
-    for(int y = 0; y < size_y_; ++y){
-        for (int x = 0; x < size_x_; ++x){
-            if (mapNew_[NumberCell(x, y)] == 1){
+    for(int y = 0; y < game.GiveSizeY(); ++y){
+        for (int x = 0; x < game.GiveSizeX(); ++x){
+            if (game.LiveOfCell(Functions::NumberCell(x, y, game.GiveSizeX()))){
                 output << std::to_string(x) << " " << std::to_string(y) << std::endl;
             }
         }
     }
 }
 
-void Controller :: Save(std::string name){
+void Controller :: Save(std::string name, Game& game){
 
     std::string full_name_directory = name_of_root + "/" +"Saves";
     std::string full_name_file = full_name_directory + "/" + name + ".txt";
     auto result = std::filesystem::create_directory(full_name_directory);
     if (name[0] != '/'){
-        Write(std::ofstream (full_name_file),name);
+        Write(std::ofstream (full_name_file),name, game);
     }
     else{
         srand((unsigned) time(NULL));
         std::string rand_name = std::to_string(rand() % 100000);
         std::string my_name = "Your_save" + rand_name;
         if(std::ofstream(name)){
-            Write(std::ofstream (name),my_name );
+            Write(std::ofstream (name),my_name, game);
         }
         else{
             std::cout << "I can't save your file in your place... Sorry, but I save its in directory Saves!!!" << std::endl;
-            Write(std::ofstream(full_name_file), my_name);
+            Write(std::ofstream(full_name_file), my_name, game);
             std::cout << "Your name - " + my_name << std::endl;
 
         }
@@ -175,14 +191,15 @@ void Controller :: SaveNameOfRoot(char* input){
      name_of_root = executablePath.string();
 }
 
-int Controller::PreRun(char * argv[], int argc){
-    Interface first(size_x_, size_y_);
+int Controller::PreRun(char * argv[], int argc, Game& game){
+
+    Interface first;
     for (int i = 1; i < argc; ++i){
         switch(Analiz(std::string(argv[i]))){
             case 1:
             ++i;
             if (i < argc){
-                repeat_of_iteration = GiveDigit(std::string(argv[i]));
+                repeat_of_iteration = Functions::GiveDigit(std::string(argv[i]));
                 if (repeat_of_iteration == -1){
                     error = 'r';
                 }
@@ -196,7 +213,7 @@ int Controller::PreRun(char * argv[], int argc){
             case 2:
             ++i;
             if (i < argc){
-                Save(std::string(argv[i]));
+                Save(std::string(argv[i]), game);
                 first.PrintText('s');
                 return 1;
             }
@@ -207,18 +224,18 @@ int Controller::PreRun(char * argv[], int argc){
             break;
 
             case 3:
-            Open(std::string(argv[i]));
+            Open(std::string(argv[i]),game);
             break;
 
             case 4:
-            repeat_of_iteration = GiveDigit(std::string(argv[i]).substr(13));
+            repeat_of_iteration = Functions::GiveDigit(std::string(argv[i]).substr(13));
             if (repeat_of_iteration == -1){
                 error = 'r';
             }
             break;
 
             case 5:
-            Save(std::string(argv[i]).substr(9));
+            Save(std::string(argv[i]).substr(9), game);
             first.PrintText('s');
             return 1;
             break;
@@ -231,8 +248,7 @@ int Controller::PreRun(char * argv[], int argc){
         ShowError(first);
         if (repeat_of_iteration != -1){
             for(int j = 0; j < repeat_of_iteration; ++j){
-                SwapMap();
-                RecountMap();
+                game.RecountMap();
             }
             std::cout << "I recounted your map " + std::to_string(repeat_of_iteration) + " times" << std::endl;
             repeat_of_iteration = -1;
@@ -270,58 +286,50 @@ int Controller::Analiz(std::string input){
     }
 }
 
-void Controller :: Start(int argc, char* argv[]){
+void Controller :: Start(int argc, char* argv[], Game& game){
     std:: string address1;
     SaveNameOfRoot(argv[0]);
     if (argc > 1){
-        if (PreRun(argv, argc) == 0){
-            Run();
+        if (PreRun(argv, argc, game) == 0){
+            Run(game);
         }
     }
     else{
-        Open(name_of_root + Example::GiveExample());
-        Run();
+        Open(name_of_root + Example::GiveExample(), game);
+        Run(game);
     }
 }
 
-void Controller :: Show(Interface out, int amount){
-    std::cout << "\033c";
-    out.Output(mapNew_);
-    for(int i = 0; i < amount; ++i){
-        SwapMap();
-        RecountMap();
-        usleep(100000);
-        std::cout << "\033c";
-        out.Output(mapNew_);
-        std::cout << std::endl;
-    }
-}
+void Controller :: Run(Game& game){
 
-void Controller :: Run(){
-
-    Interface first(size_x_, size_y_);
+    Interface first;
     ShowError(first);
     first.PrintText('b');
     bool run_game = true;
     while(run_game){
         std::string input;
         std::string data_file; 
+        int x = -1;
+        int y = -1;
         getline(std::cin, input, '\n');
         switch (first.Analyze(input)){
             case 1:
             data_file = input.substr(5);
-            Save(data_file);
+            Save(data_file, game);
             first.PrintText('s');
             break;
 
             case 2:
             data_file = input.substr(5);
-            repeat_of_iteration = GiveDigit(data_file);
+            repeat_of_iteration = Functions::GiveDigit(data_file);
             if (repeat_of_iteration != -1){
-                Show(first, repeat_of_iteration);
+                first.Show( repeat_of_iteration, game);
             }
             else{
-                first.PrintText('i');
+                std::cout << "\033c";
+                first.Output(game);
+                error = 'i';
+                first.PrintText('e');
             }
             break;
             case 3:
@@ -329,10 +337,29 @@ void Controller :: Run(){
             break;
 
             case 4:
+                std::cout << "\033c";
+                first.Output(game);
                 first.PrintText('h');
             break;
+            case 5:
+                data_file = input.substr(5);
 
+
+                if (SizeParser(&x, &y, data_file) == -1){
+                    std::cout << "\033c";
+                    first.Output(game);
+                    first.PrintText('e');
+                }
+                else{
+                    game.RecountSize(x, y);
+                    std::cout << "\033c";
+                    first.Output(game);
+                }
+            break;
             case -1:
+                std::cout << "\033c";
+                first.Output(game);
+                error = 'i';
                 first.PrintText('e');
             break;
 
@@ -344,6 +371,5 @@ void Controller :: Run(){
         }
         ShowError(first);
     }
-
 }
 

@@ -11,10 +11,11 @@ add_subdirectory(src/Controller/)
 add_subdirectory(src/Game/)
 add_subdirectory(src/Interface/)
 add_subdirectory(src/Example/)
+add_subdirectory(src/Functions/)
 
 set(SOURCE_FILES src/main.cpp)
 
 add_executable(Laba2 ${SOURCE_FILES})
 
-target_link_libraries(Laba2 PUBLIC Controllers Games Interfaces Examples)
+target_link_libraries(Laba2 PUBLIC Controllers Games Interfaces Examples Functions)
 
