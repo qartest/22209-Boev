@@ -3,9 +3,7 @@
 Game::Game(int size_x, int size_y){
     size_x_ = size_x;
     size_y_ = size_y;
-
 }
-
 
 std::vector<char> Game :: GiveMap(){
     return map_;
@@ -52,14 +50,6 @@ bool Game :: LiveOfCell(int number){
         return true;
     }
     return false;
-}
-
-void Game :: TakeX(int x){
-    size_x_ = x;
-}
-
-void Game :: TakeY(int y){
-    size_y_ = y;
 }
 
 void Game:: RecountSize(int x, int y){

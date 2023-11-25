@@ -16,8 +16,6 @@ public:
 
     int GiveSizeX();
     int GiveSizeY();
-    void TakeX(int x);
-    void TakeY(int y);
 
     void TakeCell(int place);
     bool LiveOfCell(int number);

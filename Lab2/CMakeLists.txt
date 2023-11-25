@@ -4,6 +4,11 @@ set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
+
+file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/answer)
+
 project (Laba2)
 
 include_directories(src)
@@ -12,10 +17,24 @@ add_subdirectory(src/Game/)
 add_subdirectory(src/Interface/)
 add_subdirectory(src/Example/)
 add_subdirectory(src/Functions/)
+add_subdirectory(src/Tests/)
+add_subdirectory(googletest)
 
-set(SOURCE_FILES src/main.cpp)
 
-add_executable(Laba2 ${SOURCE_FILES})
+add_executable(Laba2 src/main.cpp)
 
-target_link_libraries(Laba2 PUBLIC Controllers Games Interfaces Examples Functions)
+target_link_libraries(Laba2  PUBLIC Controllers Games Interfaces Examples Functions gtest gcov)
 
+set(COVERAGE_DIR ${CMAKE_SOURCE_DIR}/answer)
+
+enable_testing()
+add_test(TestGame Tests)
+
+add_custom_target(coverage
+    COMMAND ${CMAKE_MAKE_PROGRAM} test
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND lcov --capture --directory . --output-file ${COVERAGE_DIR}/coverage.info
+    COMMAND lcov --remove ${COVERAGE_DIR}/coverage.info '/usr/include/*' --output-file ${COVERAGE_DIR}/coverage.info
+    COMMAND genhtml ${COVERAGE_DIR}/coverage.info --output-directory ${COVERAGE_DIR}/html
+    COMMENT "Running gcov and lcov"
+)
