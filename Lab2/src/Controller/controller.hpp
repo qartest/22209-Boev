@@ -3,6 +3,9 @@
 #include <string>
 #include "../Example/example.hpp"
 #include "../Interface/interface.hpp"
+#include "stateofcall.hpp"
+
+
 
 class Controller{
 
@@ -32,10 +35,10 @@ class Controller{
 
     void Run(Game& game);
     int PreRun(char * argv[], int argc, Game& game);
-    int Analiz(std::string input);
+    StateOfCall AnalizOfCall(std::string input);
 
-    int SizeParser(int *x, int *y, std::string input);
-    void RecountSize(int x, int y, Game game);
+    int SizeParser(int *size, std::string input);
+    void RecountSize(int size, Game game);
     
     public:
 

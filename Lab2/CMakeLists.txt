@@ -18,12 +18,12 @@ add_subdirectory(src/Interface/)
 add_subdirectory(src/Example/)
 add_subdirectory(src/Functions/)
 add_subdirectory(src/Tests/)
-add_subdirectory(googletest)
+#add_subdirectory(googletest)
 
 
 add_executable(Laba2 src/main.cpp)
 
-target_link_libraries(Laba2  PUBLIC Controllers Games Interfaces Examples Functions gtest gcov)
+target_link_libraries(Laba2  PUBLIC Controllers Games Interfaces Examples Functions )
 
 set(COVERAGE_DIR ${CMAKE_SOURCE_DIR}/answer)
 

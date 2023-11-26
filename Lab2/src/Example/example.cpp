@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstdlib>
 
-std::vector <std::string> examples_base ={
+const std::vector <std::string> examples_base ={
     "/src/Example/Examples/c.txt",
     "/src/Example/Examples/first.txt",
     "/src/Example/Examples/second.txt",
@@ -12,7 +12,7 @@ std::vector <std::string> examples_base ={
 };  
 
 
-std:: string Example :: GiveExample(){
+std::string Example::GiveExample(){
     srand((unsigned) time(NULL));
     int digit_of_string = std::rand() % examples_base.size();
     return examples_base[digit_of_string];

@@ -16,21 +16,20 @@ void Controller :: MakeError(char input){
     error = input;
 }
 
-int Controller :: SizeParser(int *x, int *y, std::string input){
+int Controller :: SizeParser(int *size, std::string input){
     std::vector<std::string> digits;
     std::stringstream ss (input);
     std::string tmp;
     while(std::getline(ss, tmp, ' ')){
         digits.push_back(tmp);
     }
-    if (digits.size() < 2){
+    if (digits.size() < 1){
         return -1;
     }
 
-    *x = Functions::GiveDigit(digits[0]);
-    *y = Functions::GiveDigit(digits[1]);
+    *size = Functions::GiveDigit(digits[0]);
     
-    if (*y == -1 || *x == -1){
+    if (*size == -1){
         return -1;
     }
     return 0;
@@ -103,20 +102,16 @@ void Controller :: Read(std::fstream file_in, Game& game){
             break;
         }
         if(input_line[0] != '#'){
-            int size_of_map = game.GiveMap().size();
+
             int number_of_cell = ReadCell(input_line, game);
             if (number_of_cell != -1){
-                if (number_of_cell >= size_of_map){
-                    game.GiveZeroMap(number_of_cell - size_of_map + 1);
-                }
-                game.TakeCell(number_of_cell);
+                game.TakeCell(number_of_cell, State::Alive);
             }
         }
         else{
             ReadName(input_line, game);
         }
     }
-    game.GiveZeroMap(game.GiveSizeX() * game.GiveSizeY() - game.GiveMap().size());
 }
 
 void Controller :: Open(std::string address, Game& game){
@@ -150,7 +145,7 @@ void Controller :: Write(std::ofstream output, std::string name, Game& game){
 
     for(int y = 0; y < game.GiveSizeY(); ++y){
         for (int x = 0; x < game.GiveSizeX(); ++x){
-            if (game.LiveOfCell(Functions::NumberCell(x, y, game.GiveSizeX()))){
+            if (game.LiveOfCell(x, y)){
                 output << std::to_string(x) << " " << std::to_string(y) << std::endl;
             }
         }
@@ -191,12 +186,14 @@ void Controller :: SaveNameOfRoot(char* input){
      name_of_root = executablePath.string();
 }
 
+
+
 int Controller::PreRun(char * argv[], int argc, Game& game){
 
     Interface first;
     for (int i = 1; i < argc; ++i){
-        switch(Analiz(std::string(argv[i]))){
-            case 1:
+        switch(AnalizOfCall(std::string(argv[i]))){
+            case StateOfCall::NumberOfRepeat2Words:
             ++i;
             if (i < argc){
                 repeat_of_iteration = Functions::GiveDigit(std::string(argv[i]));
@@ -210,7 +207,7 @@ int Controller::PreRun(char * argv[], int argc, Game& game){
             }
             break;
 
-            case 2:
+            case StateOfCall::OutputFile2Word:
             ++i;
             if (i < argc){
                 Save(std::string(argv[i]), game);
@@ -223,24 +220,24 @@ int Controller::PreRun(char * argv[], int argc, Game& game){
             }
             break;
 
-            case 3:
+            case StateOfCall::InputFile:
             Open(std::string(argv[i]),game);
             break;
 
-            case 4:
+            case StateOfCall::NumberOfRepeat1Words:
             repeat_of_iteration = Functions::GiveDigit(std::string(argv[i]).substr(13));
             if (repeat_of_iteration == -1){
                 error = 'r';
             }
             break;
 
-            case 5:
+            case StateOfCall::OutputFile1Word:
             Save(std::string(argv[i]).substr(9), game);
             first.PrintText('s');
             return 1;
             break;
 
-            case -1:
+            case StateOfCall::Bad:
             error = 'c';
             i = argc;
             break;
@@ -258,31 +255,31 @@ int Controller::PreRun(char * argv[], int argc, Game& game){
     return 0; 
 }
 
-int Controller::Analiz(std::string input){
+StateOfCall Controller::AnalizOfCall(std::string input){
     
     std::string first_name = input.substr(0, 2);
     if (first_name == "-i"){
-        return 1;
+        return StateOfCall::NumberOfRepeat2Words;
     }
     else if (first_name == "-o"){
-        return 2;
+        return StateOfCall::OutputFile2Word;
     }
     else if (first_name[0] == '/'){
-        return 3;
+        return StateOfCall::InputFile;
     }
     else if (first_name == "--"){
         if (input[2] == 'i'){
-            return 4;
+            return StateOfCall::NumberOfRepeat1Words;
         }
         else if(input[2] == 'o'){
-            return 5;
+            return StateOfCall::OutputFile1Word;
         }
         else{
-            return -1;
+            return StateOfCall::Bad;
         }
     }
     else{
-        return -1;
+        return StateOfCall::Bad;
     }
 }
 
@@ -309,17 +306,17 @@ void Controller :: Run(Game& game){
     while(run_game){
         std::string input;
         std::string data_file; 
-        int x = -1;
-        int y = -1;
+        int size = -1;
+
         getline(std::cin, input, '\n');
         switch (first.Analyze(input)){
-            case 1:
+            case Analiz::Dump:
             data_file = input.substr(5);
             Save(data_file, game);
             first.PrintText('s');
             break;
 
-            case 2:
+            case Analiz::Tick:
             data_file = input.substr(5);
             repeat_of_iteration = Functions::GiveDigit(data_file);
             if (repeat_of_iteration != -1){
@@ -332,38 +329,38 @@ void Controller :: Run(Game& game){
                 first.PrintText('e');
             }
             break;
-            case 3:
+            case Analiz::Exit:
             run_game = false;
             break;
 
-            case 4:
+            case Analiz::Help:
                 std::cout << "\033c";
                 first.Output(game);
                 first.PrintText('h');
             break;
-            case 5:
+            case Analiz::Size:
                 data_file = input.substr(5);
 
 
-                if (SizeParser(&x, &y, data_file) == -1){
+                if (SizeParser(&size, data_file) == -1){
                     std::cout << "\033c";
                     first.Output(game);
                     first.PrintText('e');
                 }
                 else{
-                    game.RecountSize(x, y);
+                    game.RecountSize(size);
                     std::cout << "\033c";
                     first.Output(game);
                 }
             break;
-            case -1:
+            case Analiz::Bad:
                 std::cout << "\033c";
                 first.Output(game);
                 error = 'i';
                 first.PrintText('e');
             break;
 
-            case 0:
+            case Analiz::BadName:
             error = 's';
             break;
             default:

@@ -27,7 +27,6 @@ void Interface::Output(Game game){
     int size_x_ = game.GiveSizeX();
     int size_y_ = game.GiveSizeY();
 
-    std::vector<char> input = game.GiveMap();
 
     std :: cout << std::endl;
     std :: cout << "Print help, if you don't know commands" << std::endl;
@@ -36,7 +35,7 @@ void Interface::Output(Game game){
     for (int j = 0; j < size_y_; ++j){
         std::cout << '|';
         for (int i = 0; i < size_x_; ++i){
-            if(input[j * size_x_ + i] == 1){
+            if(game.LiveOfCell(i, j)){
                 std:: cout << (char)42;
             }
             else{
@@ -62,36 +61,40 @@ void Interface :: Show(int amount, Game& game){
     }
 }
 
-int Interface:: Analyze(std::string input){
+Analiz Interface:: Analyze(std::string input){
     if (input.size() >= 4){
         std::string comand = input.substr(0, 4);
         if (comand == "dump"){
             if (input.size() > 104){
-                return 0;
+                return Analiz::BadName;
             }
-            return 1;
+            return Analiz::Dump;
         }
         else if(comand == "tick"){
             if (input.size() < 6){
-                return -1;
+                return Analiz::Bad;
             }
-            return 2;
+            return Analiz::Tick;
         }
         else if(comand == "exit"){
-            return 3;
+            return Analiz::Exit;
         }
         else if(comand == "help"){
-           return 4;
+           return Analiz::Help;
         }
         else if (comand == "size"){
-            if (input.size() < 8){
-                return -1;
+            if (input.size() < 6){
+                return Analiz::Bad;
             }
-            return 5;
+            return Analiz::Size;
         }
     }
-    return -1;
+    return Analiz::Bad;
 }
+
+
+
+
 
 void Interface :: PrintError(char error){
     switch (error){
