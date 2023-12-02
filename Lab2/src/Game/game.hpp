@@ -1,17 +1,10 @@
 #pragma once
-
 #include <memory>
 #include <vector>
 #include <algorithm> 
 #include <bitset>
-#include "../Functions/Function.hpp"
-
-
-enum class State
-{
-    Dead,
-    Alive,
-};
+#include <string>
+#include "EnumClasses.hpp"
 
 class Field
 {
@@ -27,6 +20,27 @@ private:
     std::vector<State> field;
 };
 
+typedef struct INPUT_DATA{
+    std::bitset <8> rule_s;
+    std::bitset <8> rule_b;
+
+    Field my_field;
+
+    int size_of_side;
+
+    Mode mode;
+    std::vector<Errors> errors;
+    int repeat_of_iteration;
+
+    std::string output_name;
+
+    bool save_run;
+    std::string name;
+
+    std::string name_of_root;
+    
+}call_input_data;
+
 class Game{
 
 public:
@@ -34,20 +48,14 @@ public:
     void RecountMap();
     void RecountSize(int side);
 
-    int GiveSizeX();
-    int GiveSizeY();
-
-    void TakeCell(int place, State state);
-    bool LiveOfCell(int x, int y);
-
     int GiveSizeRulers();
-    bool GiveSurval(int number);
-    bool GiveBorn(int number);
-    void TakeSurval(int number);
-    void TakeBorn(int number);
+    const Field GiveField() const;
+
+    bool GiveSurval(int i);
+    bool GiveBorn(int i);
 
     Game() = default;
-    Game(int size);
+    Game(call_input_data input);
     ~Game() = default;
 
 
@@ -57,9 +65,6 @@ private:
 
     std::bitset <8> rule_s;
     std::bitset <8> rule_b;
-
-    int size_x_;
-    int size_y_;
 
     bool CheckOnePixel(int coord_x, int coord_y);
 

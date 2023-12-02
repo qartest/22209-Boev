@@ -1,7 +1,11 @@
+#include "interface.hpp"
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <vector>
 #include <unistd.h>
-#include "interface.hpp"
+
+
 
 namespace
 {
@@ -20,22 +24,62 @@ void BottonOutput(int size_x){
     std::cout  << '|';
     std::cout << std::endl;
 }
+
+int GiveDigit(std::string int_string){
+    int digit = -1;
+    for(int j = 0; j < int_string.size(); ++j){
+        if(isdigit(int_string[j])){
+            digit = ((digit + (digit == -1)) * 10) + (int_string[j]- '0');
+        }
+        else{
+            break;
+        }
+    }
+    return digit;    
 }
+
+int SizeParser(std::string input){
+    std::vector<std::string> digits;
+    std::stringstream ss (input);
+    std::string tmp;
+    int size = -1;
+    while(std::getline(ss, tmp, ' ')){
+        digits.push_back(tmp);
+    }
+    if (digits.size() < 1){
+        return -1;
+    }
+
+    size = GiveDigit(digits[0]);
+    
+    if (size == -1){
+        return -1;
+    }
+    return size;
+}
+}
+const void Interface::ShowHelp() const{
+    std::cout << "dump <filename> - save your universe" << std::endl;
+    std::cout << "tick <n = 1> - do n steps on your game" << std::endl;
+    std::cout << "exit - break the game" << std::endl;
+    std::cout << "help - this command)" << std::endl;
+}
+
 
 void Interface::Output(Game game){
 
-    int size_x_ = game.GiveSizeX();
-    int size_y_ = game.GiveSizeY();
+    std::cout << "\033c";
+    Field field = game.GiveField();
 
-
+    int size = field.getSizeofside();
     std :: cout << std::endl;
     std :: cout << "Print help, if you don't know commands" << std::endl;
-    TopOutput(size_x_); 
+    TopOutput(size); 
 
-    for (int j = 0; j < size_y_; ++j){
+    for (int j = 0; j < size; ++j){
         std::cout << '|';
-        for (int i = 0; i < size_x_; ++i){
-            if(game.LiveOfCell(i, j)){
+        for (int i = 0; i < size; ++i){
+            if(field.getState(i, j) == State::Alive){
                 std:: cout << (char)42;
             }
             else{
@@ -45,11 +89,15 @@ void Interface::Output(Game game){
         std::cout << '|';
         std :: cout << std::endl;
     }
-    BottonOutput(size_x_);
+    BottonOutput(size);
+}
+
+void Interface :: ShowSave(){
+    std::cout << "I save your file" << std::endl;
 }
 
 void Interface :: Show(int amount, Game& game){
-    std::cout << "\033c";
+
     Output(game);
     for(int i = 0; i < amount; ++i){
         game.RecountMap();
@@ -61,99 +109,73 @@ void Interface :: Show(int amount, Game& game){
     }
 }
 
-Analiz Interface:: Analyze(std::string input){
+my_var Interface :: Input_Analysis(Game& game, std::string name_of_root){
+    std::string input;
+    getline(std::cin, input, '\n');
     if (input.size() >= 4){
         std::string comand = input.substr(0, 4);
         if (comand == "dump"){
-            if (input.size() > 104){
-                return Analiz::BadName;
-            }
-            return Analiz::Dump;
+
+            return VDump{input.substr(5), game, name_of_root};
         }
         else if(comand == "tick"){
             if (input.size() < 6){
-                return Analiz::Bad;
+                return VBad{};
             }
-            return Analiz::Tick;
+            int repeat_of_iterations = SizeParser(input.substr(5));
+            if (repeat_of_iterations == -1){
+                return VBad{};
+            }
+            Show(repeat_of_iterations, game);
+            return VTick{};
         }
         else if(comand == "exit"){
-            return Analiz::Exit;
+            return VExit{};
         }
         else if(comand == "help"){
-           return Analiz::Help;
+            Output(game);
+            ShowHelp();
+           return VHelp{};
         }
         else if (comand == "size"){
             if (input.size() < 6){
-                return Analiz::Bad;
+                return VBad{};
             }
-            return Analiz::Size;
+            int size =  SizeParser(input.substr(5));
+            if (size == -1){
+                return VBad{};
+            }
+            game.RecountSize(size);
+            Output(game);
+            return VSize{};
         }
     }
-    return Analiz::Bad;
+    return VBad{};
 }
 
+ void Interface :: ShowErrors(std::vector<Errors> error) {
 
-
-
-
-void Interface :: PrintError(char error){
-    switch (error){
-        case '\0':
+    for(auto i = error.begin(); i != error.end(); ++i){
+        switch (*i)
+        {
+        case Errors :: CallProgrammIncorrectly:
+            std::cout << "You called the program incorrectly" << std::endl;
+        break;
+        case Errors :: ProblemWithInputOfIteration:
+            std::cout << "You have problem with input of iteration" << std::endl;
+        break;
+        case Errors :: Input:
+            std::cout << "You have problem with input" << std::endl;
+        break;
+        case Errors :: CanNotOpenFile:
+            std::cout << "I can't open your file" << std::endl;
+        break;
+        case Errors :: InputData:
+            std::cout << "You have problem with input data" << std::endl;
         break;
 
-        case 'd':
-        std::cout << "You have problem with input data" << std::endl;
-        break;
-
-        case 's':
-        std::cout << "Bro, its name is so big... I don't save" << std::endl;
-        break;
-
-        case 'f':
-        std::cout << "I can't open your file" << std::endl;
-        break;
-
-        case 'i':
-        std::cout << "You have problem with input" << std::endl;
-        break;
-
-        case 'c':
-        std::cout << "You called the program incorrectly" << std::endl;
-        break;
-
-        case 'r':
-        std::cout << "You have problem with input of iteration" << std::endl;
-        break;
-        default:
-        break;
-    }
-}
-
-void Interface :: PrintText(char type){
-    switch (type){
-        case 'h':
-            std::cout << "dump <filename> - save your universe" << std::endl;
-            std::cout << "tick <n = 1> - do n steps on your game" << std::endl;
-            std::cout << "exit - break the game" << std::endl;
-            std::cout << "help - this command)" << std::endl;
-        break;
-
-        case 'e':
-            std::cout << "I don't know what you mean. Please, repeat" << std::endl;
-        break;
-
-        case 'b':
-            std::cout << "Hello, user! Let's go play!"<< std::endl;
-        break;
-
-        case 's':
-            std::cout << "I save your file" << std::endl;
-        break;
-
-        case 'o':
-            std::cout << "You didn't give the output file. Okey..." << std::endl;
-        break;
         default:
             break;
+        }
     }
 }

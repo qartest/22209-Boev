@@ -1,8 +1,10 @@
 #include "Controller/controller.hpp"
-int SIZE = 30;
+#include "Parser/parser.hpp"
 
 int main(int argc, char** argv){
-    Game game(SIZE);
-    Controller first;
-    first.Start(argc, argv, game);
+    call_input_data input = Parser::ParsingInput(argc, argv);
+
+    Game game(input);
+    Controller controller(input);
+    controller.Run(game);
 }
