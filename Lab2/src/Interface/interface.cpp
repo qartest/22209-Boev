@@ -3,7 +3,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include <unistd.h>
+
 
 
 
@@ -66,11 +66,9 @@ const void Interface::ShowHelp() const{
 }
 
 
-void Interface::Output(Game game){
+void Interface::Output(const Field& field){
 
     std::cout << "\033c";
-    Field field = game.GiveField();
-
     int size = field.getSizeofside();
     std :: cout << std::endl;
     std :: cout << "Print help, if you don't know commands" << std::endl;
@@ -90,33 +88,27 @@ void Interface::Output(Game game){
         std :: cout << std::endl;
     }
     BottonOutput(size);
+
+    std::cout << std::endl;
+    std::cout << "All Okey!!!" << std::endl;
 }
 
 void Interface :: ShowSave(){
     std::cout << "I save your file" << std::endl;
 }
 
-void Interface :: Show(int amount, Game& game){
-
-    Output(game);
-    for(int i = 0; i < amount; ++i){
-        game.RecountMap();
-        usleep(100000);
-        std::cout << "\033c";
-        Output(game);
-        std::cout << std::endl;
-        std::cout << "All Okey!!!" << std::endl;
-    }
+const void Interface :: ShowDoNotMean() const{
+    std::cout << "I don't know what you mean. Please, repeat" << std::endl;
 }
 
-my_var Interface :: Input_Analysis(Game& game, std::string name_of_root){
+my_var Interface :: Input_Analysis(){
     std::string input;
     getline(std::cin, input, '\n');
     if (input.size() >= 4){
         std::string comand = input.substr(0, 4);
         if (comand == "dump"){
 
-            return VDump{input.substr(5), game, name_of_root};
+            return VDump{input.substr(5)};
         }
         else if(comand == "tick"){
             if (input.size() < 6){
@@ -126,15 +118,12 @@ my_var Interface :: Input_Analysis(Game& game, std::string name_of_root){
             if (repeat_of_iterations == -1){
                 return VBad{};
             }
-            Show(repeat_of_iterations, game);
-            return VTick{};
+            return VTick{repeat_of_iterations};
         }
         else if(comand == "exit"){
             return VExit{};
         }
         else if(comand == "help"){
-            Output(game);
-            ShowHelp();
            return VHelp{};
         }
         else if (comand == "size"){
@@ -145,9 +134,7 @@ my_var Interface :: Input_Analysis(Game& game, std::string name_of_root){
             if (size == -1){
                 return VBad{};
             }
-            game.RecountSize(size);
-            Output(game);
-            return VSize{};
+            return VSize{size};
         }
     }
     return VBad{};

@@ -1,13 +1,13 @@
 #pragma once
 #include <variant>
-#include "../Game/game.hpp"
+#include <string>
+#include "../Field/Field.hpp"
+
 
 
 struct VDump
 {   
     std::string out;
-    Game& game;
-    std::string name_of_root;
 };
 
 struct VExit
@@ -15,10 +15,12 @@ struct VExit
 
 struct VTick
 {
+    int repeat_of_iteration;
 };
 
 struct VSize
 {
+    int size;
 };
 
 struct VHelp
@@ -36,14 +38,13 @@ class Interface{
 public: 
     Interface() = default;
     ~Interface() = default;
-    void Output(Game game);
+    void Output(const Field& field);
 
     void ShowErrors(std::vector<Errors> error);
-    void Show(int amount, Game& game);
     const void ShowHelp() const;
     const void ShowDoNotMean() const;
     void ShowSave();
 
-    my_var Input_Analysis(Game& game, std::string name_of_root);
+    my_var Input_Analysis();
 };
 

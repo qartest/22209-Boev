@@ -1,5 +1,5 @@
 #include "game.hpp"
-#include <cmath>
+
 
 namespace{
     int NumberCell(int coord_x, int coord_y, int size_x_){
@@ -11,31 +11,11 @@ namespace{
 
 }
 
-Field :: Field(int size){
-
-    size_of_side = (int)floor(sqrt(size));
-
-    field = std::vector<State>(size_of_side * size_of_side);
-    std::fill(field.begin(), field.end(), State::Dead);
-}
-
-State Field :: getState(int x, int y){
-    return field[NumberCell(x, y, size_of_side)];
-}
-
-void Field :: setCell(int x, int y, State state){
-    field[NumberCell(x, y, size_of_side)] = state;
-}
-
-int Field :: getSizeofside(){
-    return size_of_side;
-}
-
 int Game :: GiveSizeRulers(){
     return rule_b.size();
 }
 
-const Field Game :: GiveField() const{
+const Field& Game :: GiveField() const{
     return my_field;
 }
 bool Game :: GiveBorn(int i){

@@ -1,6 +1,15 @@
 #pragma once
 #include <string>
+#include "../Game/game.hpp"
 #include "../Interface/interface.hpp"
+
+
+template<typename ... Ts>                                               
+struct Overload : Ts ... { 
+    using Ts::operator() ...;
+};
+template<class... Ts> Overload(Ts...) -> Overload<Ts...>;
+
 
 class Controller{
 
@@ -17,7 +26,7 @@ class Controller{
 
     private:
     void ShowError(Interface output);
-
+    void Show(int amount, Game& game, Interface interface);
     
 
     public:

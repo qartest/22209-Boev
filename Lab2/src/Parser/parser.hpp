@@ -1,9 +1,18 @@
 #pragma once
-#include "../Game/game.hpp"
+#include "../CallInput/CallInput.hpp"
 #include "../Example/example.hpp"
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+
+enum class StateOfCall{
+    NumberOfRepeat2Words,
+    NumberOfRepeat1Words,
+    OutputFile1Word,
+    OutputFile2Word,
+    InputFile,
+    Bad,
+};
 
 
 namespace Parser{

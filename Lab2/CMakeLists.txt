@@ -18,12 +18,13 @@ add_subdirectory(src/Interface/)
 add_subdirectory(src/Example/)
 add_subdirectory(src/Parser/)
 add_subdirectory(src/Tests/)
+add_subdirectory(src/Field/)
 #add_subdirectory(googletest)
 
 
 add_executable(Laba2 src/main.cpp)
 
-target_link_libraries(Laba2 PUBLIC Parser  Controllers Games Interfaces Examples)
+target_link_libraries(Laba2 PUBLIC Parser  Controllers Games Interfaces Examples Field)
 
 set(COVERAGE_DIR ${CMAKE_SOURCE_DIR}/answer)
 

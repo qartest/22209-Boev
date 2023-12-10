@@ -6,6 +6,8 @@
 #include <string>
 #include <filesystem>
 #include <variant>
+#include <unistd.h>
+
 
 namespace{
 
@@ -69,34 +71,34 @@ void Save(std::string name, Game& game, std::string name_of_root){
 
 }
 
-struct MainBuilder
-{
-    bool operator()(const VExit& exit){
-        return false;
-    }
+// struct MainBuilder
+// {
+//     bool operator()(const VExit& exit){
+//         return false;
+//     }
 
-    bool operator()(const VDump& dump){
-        Save(dump.out, dump.game, dump.name_of_root);
-        return true;
-    }
+//     bool operator()(const VDump& dump){
+//         Save(dump.out, dump.game, dump.name_of_root);
+//         return true;
+//     }
 
-    bool operator()(const VBad& bad){
-        std::cout << "I don't know what you mean. Please, repeat" << std::endl;
-        return true;
-    }
+//     bool operator()(const VBad& bad){
+//         std::cout << "I don't know what you mean. Please, repeat" << std::endl;
+//         return true;
+//     }
 
-    bool operator()(VTick& tick){
-        return true;
-    }
+//     bool operator()(VTick& tick){
+//         return true;
+//     }
 
-    bool operator()(const VHelp& help){
-        return true;
-    }
+//     bool operator()(const VHelp& help){
+//         return true;
+//     }
 
-    bool operator()(VSize& size){
-        return true;
-    }
-};
+//     bool operator()(VSize& size){
+//         return true;
+//     }
+// };
 
 Controller :: Controller(call_input_data input){
     name = input.name;
@@ -105,6 +107,7 @@ Controller :: Controller(call_input_data input){
     save_run = input.save_run;
     error = input.errors;
     out_file = input.output_name;
+    name_of_root = input.name_of_root;
 }
 
 void Controller :: ShowError(Interface output){
@@ -115,8 +118,18 @@ void Controller :: ShowError(Interface output){
 
 }
 
-void Controller :: Run(Game& game){
+void Controller :: Show(int amount, Game& game, Interface interface){
 
+    interface.Output(game.GiveField());
+    for(int i = 0; i < amount; ++i){
+        game.RecountMap();
+        usleep(100000);
+        interface.Output(game.GiveField());
+
+    }
+}
+
+void Controller :: Run(Game& game){
 
     Interface first;
     ShowError(first);
@@ -128,9 +141,20 @@ void Controller :: Run(Game& game){
     else{
         std::cout << "Hello!" << std::endl;
         bool run_game = true;
+        bool* run_game_pointer = &run_game;
+
         while(run_game){
-            auto gp = first.Input_Analysis(game, name_of_root);
-            run_game = std::visit(MainBuilder{}, gp);
+            auto gp = first.Input_Analysis();
+            std::visit(
+                Overload{
+                    [=] (const VExit& exit) {((*run_game_pointer) = false);},
+                    [&] (const VDump& dump) {Save(dump.out, game, name_of_root);},
+                    [&] (VTick& tick) {Show(tick.repeat_of_iteration, game, first);},
+                    [=] (const VBad& bad) {first.ShowDoNotMean();},
+                    [=] (const VHelp& help) {first.ShowHelp();},
+                    [&] (VSize& size) {game.RecountSize(size.size);
+                                        first.Output(game.GiveField());},
+                }, gp);
         }
     }
 }
