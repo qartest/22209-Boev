@@ -5,10 +5,10 @@ namespace Conventers
 class MuteConventer : public IConventer
 {
 private:
-    int first_;
-    int second_;
+    int time_begin_;
+    int time_end_;
 public:
-    void Do(int now_second, OneSecond :: OneSecond& second, std::deque<std::string> input_files) override;
+    void Do(int now_second, OneSecond :: OneSecond& second, std::deque<std::shared_ptr<Stream :: Stream>> input_files) override;
     MuteConventer();
     MuteConventer(int first, int second);
 };

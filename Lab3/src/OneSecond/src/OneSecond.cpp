@@ -4,7 +4,9 @@
 
 namespace OneSecond
 {
-    OneSecond :: OneSecond() = default;
+    OneSecond :: OneSecond(std::vector<one_sample> data_in){
+        data = data_in;
+    }
 
     std::vector<one_sample> OneSecond :: GiveData(){
         return data;

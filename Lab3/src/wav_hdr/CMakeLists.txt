@@ -4,16 +4,13 @@ set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(LIBRARY_NAME Open)
+set(LIBRARY_NAME wav_hdr)
 
 add_library(${LIBRARY_NAME} STATIC)
-
-target_link_libraries(${LIBRARY_NAME} PUBLIC Stream)
-target_link_libraries(${LIBRARY_NAME} PUBLIC Errors)
 target_include_directories(${LIBRARY_NAME} PUBLIC include)
 
 target_sources(${LIBRARY_NAME}
     PUBLIC
-        include/Open.hpp
+        include/wav_hdr.hpp
     PRIVATE
-        src/Open.cpp)
+        src/wav_hdr.cpp)

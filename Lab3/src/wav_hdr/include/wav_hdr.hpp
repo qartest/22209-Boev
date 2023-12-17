@@ -1,12 +1,7 @@
 #pragma once
-#include "ErrorsWav.hpp"
-#include <OneSecond.hpp>
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <cmath>
 
-typedef struct  WAV_HEADER
+struct  wav_hdr
 {
     /* RIFF Chunk Descriptor */
     unsigned char         RIFF[4];        // RIFF Header Magic header
@@ -24,24 +19,8 @@ typedef struct  WAV_HEADER
     /* "data" sub-chunk */
     unsigned char         Subchunk2ID[4]; // "data"  string
     unsigned int        Subchunk2Size;  // Sampled data length
-} wav_hdr;
+};
 
-
-namespace WavHeader{
-
-    ErrorsWav ReadInformationWav(std::string input);
-
-    bool NotMono(wav_hdr wav_header);
-    bool NotPCM(wav_hdr wav_header);
-    bool Not16B(wav_hdr wav_header);
-    bool Not44100G(wav_hdr wav_header);
-    bool NotWave(wav_hdr wav_header);
-
-    OneSecond :: OneSecond ReadSecond(std::string input, int second);
-    void WriteSecond(std::string output, OneSecond::OneSecond second, int now_second);
-
-    wav_hdr Read(std::string input);
-    wav_hdr ReadAndWriteInfo(std::string output, std::string  input);
-    int GiveSeconds(wav_hdr input);
-
-}
+namespace wav_hdr_functions{
+        int GiveSeconds(wav_hdr input);
+};

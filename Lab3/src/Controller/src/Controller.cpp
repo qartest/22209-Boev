@@ -15,20 +15,18 @@ namespace{
     }
 }
 
-Controller :: Controller(){
-    help_index = false;
-}
-
-void Controller :: CheckHelp(){
-    if (*(all_ways.end() - 1) == "help"){
-        all_ways.pop_back();
-        help_index = true;
+bool Controller :: CheckHelp(){
+    if (!(*(--all_ways2.end())) -> CheckData()){
+        all_ways2.pop_back();
+        return true;
     }
+    return false;
 }
  
 void Controller :: CheckWav(){
-    for (auto i = all_ways.end() - 1; i != all_ways.begin() + 1; --i){
-        ErrorsWav answer = WavHeader::ReadInformationWav(*i);
+    for (auto i = all_ways2.end() - 1; i != all_ways2.begin() + 1; --i){
+
+        ErrorsWav answer = WavHeader::ReadInformationWav((*i) -> Read());
         switch (answer){
             case ErrorsWav :: NotMono:
                 throw NotMono();
@@ -86,14 +84,13 @@ std::vector<std::string> Controller :: StringParser(std::string input){
 }
 
 
-void Controller :: ConfigParser(std::string config){
+void Controller :: ConfigParser(std::shared_ptr<Stream :: Stream> input){
     std::string s;
-    std::fstream file_input(config);
 
     std::vector<std::vector<std::string>> conventers_info;
 
 
-    while(std::getline(file_input, s, '\n')){
+    while(input -> getline(s, '\n')){
         std::vector<std::string> one_conventer = StringParser(s);
 
         if(one_conventer != std::vector<std::string>()){
@@ -107,55 +104,55 @@ void Controller :: ConfigParser(std::string config){
 
 void Controller :: MainBody(){
 
-    ConfigParser(*(all_ways.begin()));
-    all_ways.pop_front();
+    ConfigParser(*(all_ways2.begin()));
+    all_ways2.pop_front();
 
-    std::string output = *(all_ways.begin());
-    std::string input_1 = *(++all_ways.begin());
+    wav_hdr input_info = (*all_ways2.begin()) -> WriteInfo(*(++all_ways2.begin()));
 
-    wav_hdr input_info = WavHeader :: ReadAndWriteInfo(output, input_1);
-
-    unsigned int all_seconds = WavHeader :: GiveSeconds(input_info);
+    unsigned int all_seconds = wav_hdr_functions :: GiveSeconds(input_info);
 
     for (unsigned int i = 0; i < all_seconds; ++i){
-        OneSecond :: OneSecond second = WavHeader :: ReadSecond(input_1, i);
+        OneSecond :: OneSecond second = (*(++all_ways2.begin())) -> ReadSecond(i);
         for (auto j = conventers.begin(); j != conventers.end(); ++j){
-            (*j) -> Do(i, second, all_ways);
+            (*j) -> Do(i, second, all_ways2);
         }
 
-        WavHeader :: WriteSecond(output, second, i);
+        (*all_ways2.begin()) -> WriteSecond(second);
     }
 
 }
 
 int Controller :: Start(int argc, char* argv[])
 {   
-
+    
     try{
-        all_ways = Open::Open(argv, argc);
+        all_ways2 = Open::Open2(argv, argc);
+        
     }
-    catch(BadWay e){
+    catch(BadWay& e){
         return e.what_index();
     }
-    catch(NotWay e){
+    catch(NotWay& e){
         return e.what_index();
     }
 
-    CheckHelp();
+    if(CheckHelp()){
+        std::cout << "It is help for you" << std::endl;
+    }
 
     try{
         CheckWav();
     }
-    catch(NotWav e){
+    catch(NotWav& e){
         return e.what_index();
     }
-    catch(Not44100G e){
+    catch(Not44100G& e){
         return e.what_index();
     }
-    catch(NotPCM e){
+    catch(NotPCM& e){
         return e.what_index();
     }
-    catch(NotMono e){
+    catch(NotMono& e){
         return e.what_index();
     }
     

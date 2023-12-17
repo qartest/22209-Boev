@@ -1,30 +1,32 @@
 #pragma once
+#include <memory>
 #include <Open.hpp>
-#include <Wav_Header.hpp>
+#include <CheckWav.hpp>
 #include <Factory/FactoryCreator.hpp>
 #include <Factory/IFactory.hpp>
+#include <stream.hpp>
 
 
 class Controller
 {   
 
 private:
-    bool help_index;
-    std::string config;
-    std::deque<std::string> all_ways;
-    std::vector<Conventers::IConventerPtr> conventers;
 
-    void CheckHelp();
+    std::string config;
+    std::vector<Conventers::IConventerPtr> conventers;
+    std::deque<std::shared_ptr<Stream :: Stream>> all_ways2;
+
+    bool CheckHelp();
     void CheckWav();
 
-    void ConfigParser(std::string config);
+    void ConfigParser(std::shared_ptr<Stream :: Stream> input);
     std::vector<std::string> StringParser(std::string input);
     void MakeConveters(std::vector<std::vector<std::string>> input);
 
     void MainBody();
 
 public:
-    Controller();
+    Controller() = default;
     ~Controller() = default;
     int Start(int argc, char* argv[]);
 

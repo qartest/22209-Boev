@@ -4,16 +4,18 @@ set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(LIBRARY_NAME WavHeader)
+set(LIBRARY_NAME CheckWav)
 
 add_library(${LIBRARY_NAME} STATIC)
 
+target_link_libraries(${LIBRARY_NAME} PUBLIC Stream)
+target_link_libraries(${LIBRARY_NAME} PUBLIC wav_hdr)
 target_link_libraries(${LIBRARY_NAME} PUBLIC OneSecond)
 target_include_directories(${LIBRARY_NAME} PUBLIC include)
 
 target_sources(${LIBRARY_NAME}
     PUBLIC
-        include/Wav_Header.hpp
+        include/CheckWav.hpp
         include/ErrorsWav.hpp
     PRIVATE
-        src/Wav_Header.cpp)
+        src/CheckWav.cpp)
