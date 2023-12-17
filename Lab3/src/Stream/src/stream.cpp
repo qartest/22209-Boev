@@ -6,12 +6,13 @@ namespace Stream{
             data = std::fstream (input, std::ios::binary | std::ios::in);
         }
         else{
-            data = std::fstream (input, std::ios::binary | std::ios::app);
+            data = std::fstream (input, std::ios::binary | std::ios::out);
         }
-
     }
+
     Stream :: Stream(Stream&& vb){
         data = (std::move(vb.data)); 
+        info = vb.info;
     }
     bool Stream :: CheckData(){
         return data.is_open();
@@ -20,6 +21,7 @@ namespace Stream{
     Stream& Stream :: operator=(Stream&& vb){
         if(this != &vb){
             data = std::move(vb.data);
+            info = vb.info;
         }
         return *this;
     }
@@ -27,6 +29,7 @@ namespace Stream{
         data.seekg(0, std::ios::beg);
         wav_hdr wav_header;
         data.read((char*)&wav_header, sizeof(wav_hdr));
+        info = wav_header;
         return wav_header;
     }
 
@@ -38,16 +41,16 @@ namespace Stream{
     }
 
     OneSecond :: OneSecond Stream ::ReadSecond(int now_second){
-        wav_hdr input = Read();
+        wav_hdr input = info;
         unsigned int max_second = wav_hdr_functions :: GiveSeconds(input);
         if(now_second < max_second){
             one_sample sample;
-
-            data.seekg(now_second * input.bytesPerSec);
+            // data.seekg(0, std::ios::beg);
+            data.seekg(44 + now_second * 88200, std::ios::beg);
 
             std::vector<one_sample> input_second(44100);
 
-            for(int i = 0; i < input.bitsPerSample; ++i){
+            for(int i = 0; i < 44100; ++i){
                 data.read((char*)&sample, sizeof(one_sample));
                 input_second[i] = sample;
             }

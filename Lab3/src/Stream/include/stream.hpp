@@ -10,6 +10,7 @@ class Stream
 {
 private:
     std::fstream data;
+    wav_hdr info;
 
 public:
 

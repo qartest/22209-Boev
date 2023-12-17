@@ -49,6 +49,7 @@ std::deque<std::shared_ptr<Stream :: Stream>> Open::Open2(char* argv[], int argc
         std::string mode = "IN";
 
         if(i == 2 + (int)help_input + 1){
+            // std::fstream delete_old_data = std::fstream(way, std::ios::out | std::ios::binary);
             mode = "OUT";
         }
 
