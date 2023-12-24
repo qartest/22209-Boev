@@ -101,7 +101,7 @@ const void Interface :: ShowDoNotMean() const{
     std::cout << "I don't know what you mean. Please, repeat" << std::endl;
 }
 
-my_var Interface :: Input_Analysis(){
+UserInputResult Interface :: Input_Analysis(){
     std::string input;
     getline(std::cin, input, '\n');
     if (input.size() >= 4){

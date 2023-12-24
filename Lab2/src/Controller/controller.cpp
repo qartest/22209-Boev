@@ -71,35 +71,6 @@ void Save(std::string name, Game& game, std::string name_of_root){
 
 }
 
-// struct MainBuilder
-// {
-//     bool operator()(const VExit& exit){
-//         return false;
-//     }
-
-//     bool operator()(const VDump& dump){
-//         Save(dump.out, dump.game, dump.name_of_root);
-//         return true;
-//     }
-
-//     bool operator()(const VBad& bad){
-//         std::cout << "I don't know what you mean. Please, repeat" << std::endl;
-//         return true;
-//     }
-
-//     bool operator()(VTick& tick){
-//         return true;
-//     }
-
-//     bool operator()(const VHelp& help){
-//         return true;
-//     }
-
-//     bool operator()(VSize& size){
-//         return true;
-//     }
-// };
-
 Controller :: Controller(call_input_data input){
     name = input.name;
     repeat_of_iteration = input.repeat_of_iteration;
@@ -118,7 +89,7 @@ void Controller :: ShowError(Interface output){
 
 }
 
-void Controller :: Show(int amount, Game& game, Interface interface){
+void Controller :: Show(int amount, Game& game, Interface& interface){
 
     interface.Output(game.GiveField());
     for(int i = 0; i < amount; ++i){
@@ -133,6 +104,7 @@ void Controller :: Run(Game& game){
 
     Interface first;
     ShowError(first);
+    
 
     if (mode == Mode::Offline){
         Save(name, game, name_of_root);
@@ -141,18 +113,17 @@ void Controller :: Run(Game& game){
     else{
         std::cout << "Hello!" << std::endl;
         bool run_game = true;
-        bool* run_game_pointer = &run_game;
 
         while(run_game){
             auto gp = first.Input_Analysis();
             std::visit(
                 Overload{
-                    [=] (const VExit& exit) {((*run_game_pointer) = false);},
-                    [&] (const VDump& dump) {Save(dump.out, game, name_of_root);},
-                    [&] (VTick& tick) {Show(tick.repeat_of_iteration, game, first);},
-                    [=] (const VBad& bad) {first.ShowDoNotMean();},
-                    [=] (const VHelp& help) {first.ShowHelp();},
-                    [&] (VSize& size) {game.RecountSize(size.size);
+                    [&run_game] (const VExit& exit) {(run_game = false);},
+                    [&game, this] (const VDump& dump) {Save(dump.out, game, name_of_root);},
+                    [&game, &first, this] (VTick& tick) {Show(tick.repeat_of_iteration, game, first);},
+                    [&first] (const VBad& bad) {first.ShowDoNotMean();},
+                    [&first] (const VHelp& help) {first.ShowHelp();},
+                    [&game, &first] (VSize& size) {game.RecountSize(size.size);
                                         first.Output(game.GiveField());},
                 }, gp);
         }

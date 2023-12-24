@@ -31,7 +31,7 @@ struct VBad
 {
 };
 
-typedef std::variant<VBad, VDump, VExit, VHelp, VSize, VTick> my_var;
+using UserInputResult = std::variant<VBad, VDump, VExit, VHelp, VSize, VTick>;
 
 class Interface{
 
@@ -45,6 +45,6 @@ public:
     const void ShowDoNotMean() const;
     void ShowSave();
 
-    my_var Input_Analysis();
+    UserInputResult Input_Analysis();
 };
 
