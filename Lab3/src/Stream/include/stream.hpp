@@ -27,8 +27,6 @@ public:
     OneSecond :: OneSecond ReadSecond(int now_second);
     void WriteSecond(OneSecond::OneSecond second);
     wav_hdr WriteInfo(std::shared_ptr<Stream> input);
-    // Stream(const Stream& vb);
-    // OneSecond :: OneSecond(int second_now, int begin);
 };
 
 };

@@ -8,6 +8,5 @@
 
 namespace Open
 {
-    std::deque<std::string> Open(char* argv[], int argc);
     std::deque<std::shared_ptr<Stream :: Stream>> Open2(char* argv[], int argc);
 }
