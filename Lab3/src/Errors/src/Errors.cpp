@@ -48,6 +48,14 @@ int NotWav :: what_index(){
     return 5;
 }
 
+ConfigProblem :: ConfigProblem(){
+    cout << "Config has a problem" << endl;
+}
+
+int ConfigProblem :: what_index(){
+    return 6;
+}
+
 CalledFunctionError :: CalledFunctionError(){
     cout << "The function was called with an error" << endl;
 }

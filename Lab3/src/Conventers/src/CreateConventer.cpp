@@ -6,7 +6,7 @@
 
 namespace Conventers
 {
-IConventerPtr create_conventer(std::string name, int first, int second)
+IConventerPtr CreateConventer :: create_conventer(std::string name, int first, int second)
 {
     if (name == "mix"){
         return std::make_shared<MixConventer>(first, second);

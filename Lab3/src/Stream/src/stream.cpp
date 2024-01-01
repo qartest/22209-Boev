@@ -45,7 +45,6 @@ namespace Stream{
         unsigned int max_second = wav_hdr_functions :: GiveSeconds(input);
         if(now_second < max_second){
             one_sample sample;
-            // data.seekg(0, std::ios::beg);
             data.seekg(44 + now_second * 88200, std::ios::beg);
 
             std::vector<one_sample> input_second(44100);

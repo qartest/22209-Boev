@@ -66,6 +66,13 @@ public:
 
 };
 
+class ConfigProblem final : public InputFileErorr
+{
+public:
+  ConfigProblem();
+  int what_index();
+};
+
 class CalledFunctionError : public BaseError
 {
 public:

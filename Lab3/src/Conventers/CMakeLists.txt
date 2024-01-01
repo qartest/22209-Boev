@@ -6,6 +6,7 @@ add_library(${LIBRARY_NAME} STATIC)
 target_link_libraries(${LIBRARY_NAME} PUBLIC wav_hdr)
 target_link_libraries(${LIBRARY_NAME} PUBLIC Stream)
 target_link_libraries(${LIBRARY_NAME} PUBLIC OneSecond)
+target_link_libraries(${LIBRARY_NAME} PUBLIC OneSecond)
 target_include_directories(${LIBRARY_NAME} PUBLIC include)
 
 target_sources(${LIBRARY_NAME}

@@ -18,9 +18,9 @@ public:
     Stream(std::string input, std::string mode);
     Stream(Stream&& vb);
     Stream& operator=(Stream&& vb);
-    bool CheckData();
     virtual ~Stream() = default;
 
+    bool CheckData();
     wav_hdr Read();
     bool getline(std::string& input, char delitel);
 

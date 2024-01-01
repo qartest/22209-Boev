@@ -5,6 +5,7 @@
 #include <Factory/FactoryCreator.hpp>
 #include <Factory/IFactory.hpp>
 #include <stream.hpp>
+#include <InfoConventer.hpp>
 
 
 class Controller
@@ -15,6 +16,7 @@ private:
     std::string config;
     std::vector<Conventers::IConventerPtr> conventers;
     std::deque<std::shared_ptr<Stream :: Stream>> all_ways2;
+    std::vector<InfoConventer :: InfoConventer> all_info;
 
     bool CheckHelp();
     void CheckWav();
@@ -23,7 +25,7 @@ private:
     std::vector<std::string> StringParser(std::string input);
     void MakeConveters(std::vector<std::vector<std::string>> input);
 
-    void MainBody();
+    int  MainBody();
 
 public:
     Controller() = default;

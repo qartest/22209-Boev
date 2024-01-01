@@ -6,6 +6,11 @@
 
 namespace Conventers
 {
-IConventerPtr create_conventer(std::string name, int first, int second);
+struct CreateConventer
+{
+    CreateConventer() = default;
+    IConventerPtr create_conventer(std::string name, int first, int second);
+};
+
 }
 

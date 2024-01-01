@@ -15,6 +15,7 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC OneSecond)
 target_link_libraries(${LIBRARY_NAME} PUBLIC FactoryLib)
 target_link_libraries(${LIBRARY_NAME} PUBLIC ConventersLib)
 target_link_libraries(${LIBRARY_NAME} PUBLIC Stream)
+target_link_libraries(${LIBRARY_NAME} PUBLIC InfoConventer)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC include)
 target_sources(${LIBRARY_NAME}

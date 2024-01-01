@@ -2,16 +2,10 @@
 #include <sstream>
 
 namespace{
-    bool CheckCommand(std::vector<std::string>& input){
-        if (((input[0] == "mix") || input[0] == "mute") || input[0] == "bass"){
-            if (input[1][0] == '$'){
-                input[1] = input[1].substr(1);
-            }
-            if((std::isdigit(input[1][0])) && (std::isdigit(input[2][0]))){
-                return true;
-            }
-        }
-        return false;
+    void SetUpFactory(Factory::IFactoryPtr& factory){        
+        factory -> Add("mix", Conventers::CreateConventer());
+        factory -> Add("mute", Conventers::CreateConventer());
+        factory -> Add("bass", Conventers::CreateConventer());
     }
 }
 
@@ -57,33 +51,6 @@ void Controller :: CheckWav(){
     }
 }
 
-void Controller :: MakeConveters(std::vector<std::vector<std::string>> input){
-    Factory::IFactoryPtr factory  = Factory::create_factory();
-
-    for (int i = 0; i < input.size(); ++i){
-        conventers.push_back( factory -> create(input[i][0], std::stoi(input[i][1]), std::stoi(input[i][2])));
-    }
-    
-}
-
-std::vector<std::string> Controller :: StringParser(std::string input){
-    std::vector<std::string> words;
-    std::stringstream ss (input);
-    std::string tmp;
-
-    while(std::getline(ss, tmp, ' ')){
-        words.push_back(tmp);
-    }
-
-    if (words.size() == 3){
-        if (CheckCommand(words)){
-            return words;
-        }
-    }
-    return std::vector<std::string>();
-}
-
-
 void Controller :: ConfigParser(std::shared_ptr<Stream :: Stream> input){
     std::string s;
 
@@ -91,20 +58,39 @@ void Controller :: ConfigParser(std::shared_ptr<Stream :: Stream> input){
 
 
     while(input -> getline(s, '\n')){
-        std::vector<std::string> one_conventer = StringParser(s);
 
-        if(one_conventer != std::vector<std::string>()){
-            conventers_info.push_back(one_conventer);
+        std::vector<std::string> words;
+        std::stringstream ss (s);
+        std::string tmp;
+
+        while(std::getline(ss, tmp, ' ')){
+            words.push_back(tmp);
         }
+
+        all_info.push_back(InfoConventer::InfoConventer(words));
     }
+    
+    Factory::IFactoryPtr factory  = Factory::create_factory();
+    
+    SetUpFactory(factory);
 
-    MakeConveters(conventers_info);
-
+    for(int i = 0; i < all_info.size(); ++i){
+        auto conventer = factory -> create(all_info[i].name, all_info[i].data);
+        if(conventer == nullptr){
+            throw ConfigProblem();
+        }
+        conventers.push_back(conventer);
+    }
 }
 
-void Controller :: MainBody(){
-
-    ConfigParser(*(all_ways2.begin()));
+int Controller :: MainBody(){
+    try{
+        ConfigParser(*(all_ways2.begin()));
+    }
+    catch(ConfigProblem& e){
+        return e.what_index();
+    }
+    
     all_ways2.pop_front();
 
     wav_hdr input_info = (*all_ways2.begin()) -> WriteInfo(*(++all_ways2.begin()));
@@ -119,7 +105,7 @@ void Controller :: MainBody(){
 
         (*all_ways2.begin()) -> WriteSecond(second);
     }
-
+    return 0;
 }
 
 int Controller :: Start(int argc, char* argv[])
@@ -156,7 +142,5 @@ int Controller :: Start(int argc, char* argv[])
         return e.what_index();
     }
     
-    MainBody();
-
-    return 0;
+    return MainBody();
 }

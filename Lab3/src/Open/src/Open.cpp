@@ -1,35 +1,5 @@
 #include "Open.hpp"
 
-std::deque<std::string> Open::Open(char* argv[], int argc){
-
-    if (argc < 5){
-        throw NotWay();
-    }
-
-    bool help_input = (argv[1] == "-h");
-
-    if ((help_input) && (argc < 6)){
-        throw NotWay();
-    }
-
-    std::deque<std::string> answer;
-
-    for (int i = 2 + (int)help_input; i < argc; ++i){
-        std::string way = string(argv[i]);
-        
-        if (!std::fstream(way).is_open()){
-            throw BadWay();
-        }
-        answer.push_back(way);
-    }
-
-    if (help_input){
-        answer.push_back("help");
-    }
-
-    return answer;
-}
-
 std::deque<std::shared_ptr<Stream :: Stream>> Open::Open2(char* argv[], int argc){
 
     if (argc < 5){
@@ -44,12 +14,12 @@ std::deque<std::shared_ptr<Stream :: Stream>> Open::Open2(char* argv[], int argc
 
     std::deque<std::shared_ptr<Stream :: Stream>>  answer;
 
-    for (int i = 2 + (int)help_input; i < argc; ++i){
+    for (int i = 2 + static_cast<int>(help_input); i < argc; ++i){
         std::string way = string(argv[i]);
         std::string mode = "IN";
 
-        if(i == 2 + (int)help_input + 1){
-            // std::fstream delete_old_data = std::fstream(way, std::ios::out | std::ios::binary);
+        if(i == 2 + static_cast<int>(help_input) + 1){
+
             mode = "OUT";
         }
 
