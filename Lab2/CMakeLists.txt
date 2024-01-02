@@ -17,9 +17,8 @@ add_subdirectory(src/Game/)
 add_subdirectory(src/Interface/)
 add_subdirectory(src/Example/)
 add_subdirectory(src/Parser/)
-add_subdirectory(src/Tests/)
 add_subdirectory(src/Field/)
-#add_subdirectory(googletest)
+
 
 
 add_executable(Laba2 src/main.cpp)
@@ -28,14 +27,3 @@ target_link_libraries(Laba2 PUBLIC Parser  Controllers Games Interfaces Examples
 
 set(COVERAGE_DIR ${CMAKE_SOURCE_DIR}/answer)
 
-#enable_testing()
-#add_test(TestGame Tests)
-
-add_custom_target(coverage
-    COMMAND ${CMAKE_MAKE_PROGRAM} test
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND lcov --capture --directory . --output-file ${COVERAGE_DIR}/coverage.info
-    COMMAND lcov --remove ${COVERAGE_DIR}/coverage.info '/usr/include/*' --output-file ${COVERAGE_DIR}/coverage.info
-    COMMAND genhtml ${COVERAGE_DIR}/coverage.info --output-directory ${COVERAGE_DIR}/html
-    COMMENT "Running gcov and lcov"
-)
