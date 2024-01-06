@@ -2,7 +2,7 @@
 #include <variant>
 #include <string>
 #include "../Field/Field.hpp"
-
+#include "../EnumClasses/Errors.hpp"
 
 
 struct VDump

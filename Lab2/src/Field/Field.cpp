@@ -10,7 +10,7 @@ namespace{
 
 Field :: Field(int size){
 
-    size_of_side = (int)floor(sqrt(size));
+    size_of_side = static_cast<int>(floor(sqrt(size)));
 
     field = std::vector<State>(size_of_side * size_of_side);
     std::fill(field.begin(), field.end(), State::Dead);

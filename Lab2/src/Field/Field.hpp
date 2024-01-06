@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../EnumClasses/EnumClasses.hpp"
+#include "../EnumClasses/State.hpp"
 
 
 class Field

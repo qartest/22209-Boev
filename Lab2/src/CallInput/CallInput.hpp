@@ -1,6 +1,8 @@
 #pragma once
 #include <bitset>
 #include "../Field/Field.hpp"
+#include "../EnumClasses/Mode.hpp"
+#include "../EnumClasses/Errors.hpp"
 
 struct call_input_data{
     std::bitset <8> rule_s;

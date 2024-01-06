@@ -1,11 +1,5 @@
 #pragma once
 
-enum class State
-{
-    Dead,
-    Alive,
-};
-
 enum class Errors{
     CallProgrammIncorrectly,
     ProblemWithInputOfIteration,
@@ -13,9 +7,3 @@ enum class Errors{
     CanNotOpenFile,
     InputData,
 };
-
-enum class Mode{
-    Offline,
-    Online,
-};
-

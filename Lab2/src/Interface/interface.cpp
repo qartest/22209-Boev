@@ -4,9 +4,6 @@
 #include <fstream>
 #include <vector>
 
-
-
-
 namespace
 {
 void TopOutput(int size_x){
