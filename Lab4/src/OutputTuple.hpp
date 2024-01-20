@@ -22,4 +22,5 @@ template <typename Ch, typename Tr, typename... Args>
 auto operator<<(std::basic_ostream<Ch, Tr>& os, std::tuple<Args...>const& t) -> decltype(os){
     TuplePrinter<decltype(t), sizeof...(Args) - 1>::PrintT(os, t);
    return os;
+   
 }
