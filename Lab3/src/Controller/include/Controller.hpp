@@ -22,9 +22,6 @@ private:
     void CheckWav();
 
     void ConfigParser(std::shared_ptr<Stream :: Stream> input);
-    std::vector<std::string> StringParser(std::string input);
-    void MakeConveters(std::vector<std::vector<std::string>> input);
-
     int  MainBody();
 
 public:

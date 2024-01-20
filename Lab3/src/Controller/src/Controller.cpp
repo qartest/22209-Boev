@@ -1,11 +1,14 @@
 #include "Controller.hpp"
+#include <Conventers/CreateConventerBass.hpp>
+#include <Conventers/CreateConventerMix.hpp>
+#include <Conventers/CreateConventerMute.hpp>
 #include <sstream>
 
 namespace{
     void SetUpFactory(Factory::IFactoryPtr& factory){        
-        factory -> Add("mix", Conventers::CreateConventer());
-        factory -> Add("mute", Conventers::CreateConventer());
-        factory -> Add("bass", Conventers::CreateConventer());
+        factory -> Add("mix", std::make_shared<Conventers::CreateMix>());
+        factory -> Add("mute", std::make_shared<Conventers::CreateMute>());
+        factory -> Add("bass", std::make_shared<Conventers::CreateBass>());
     }
 }
 
