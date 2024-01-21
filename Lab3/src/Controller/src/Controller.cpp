@@ -69,8 +69,8 @@ void Controller :: ConfigParser(std::shared_ptr<Stream :: Stream> input){
         while(std::getline(ss, tmp, ' ')){
             words.push_back(tmp);
         }
-
-        all_info.push_back(InfoConventer::InfoConventer(words));
+        InfoConventer::InfoConventer coc(words);
+        all_info.push_back(coc);
     }
     
     Factory::IFactoryPtr factory  = Factory::create_factory();
@@ -78,7 +78,7 @@ void Controller :: ConfigParser(std::shared_ptr<Stream :: Stream> input){
     SetUpFactory(factory);
 
     for(int i = 0; i < all_info.size(); ++i){
-        auto conventer = factory -> create(all_info[i].name, all_info[i].data);
+        auto conventer = factory -> create(all_info[i].name, all_info[i].data2);
         if(conventer == nullptr){
             throw ConfigProblem();
         }

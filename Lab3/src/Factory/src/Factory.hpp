@@ -11,7 +11,7 @@ private:
 
 public:
     Factory() = default;
-    Conventers :: IConventerPtr create(std::string name, std::vector<std::string> params) override;
+    Conventers :: IConventerPtr create(std::string name, std::vector<int> params) override;
     void Add(std::string name, Conventers :: ICreateConventerPtr create_object) override;
 };
 }

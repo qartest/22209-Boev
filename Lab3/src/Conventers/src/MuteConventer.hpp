@@ -10,6 +10,6 @@ private:
 public:
     void Do(int now_second, OneSecond :: OneSecond& second, std::deque<std::shared_ptr<Stream :: Stream>> input_files) override;
     MuteConventer();
-    MuteConventer(int first, int second);
+    MuteConventer(std::vector<int> params);
 };
 }

@@ -1,13 +1,14 @@
 #include "BassConventer.hpp"
 #include <iostream>
+#include <variant>
 
 namespace Conventers
 {
 BassConventer :: BassConventer() = default;
 
-BassConventer :: BassConventer(int first, int second){
-    time_begin_ = first;
-    time_end_ = second;
+BassConventer :: BassConventer(std::vector<int> params){
+    time_begin_ = params[0];
+    time_end_ = params[1];
 }
 void BassConventer :: Do(int now_second, OneSecond :: OneSecond& second, std::deque<std::shared_ptr<Stream :: Stream>> input_files){
     if((now_second >= time_begin_) && (now_second < time_begin_)){

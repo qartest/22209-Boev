@@ -1,7 +1,5 @@
 #include "OneSecond.hpp"
 
-
-
 namespace OneSecond
 {
     OneSecond :: OneSecond(std::vector<one_sample> data_in){

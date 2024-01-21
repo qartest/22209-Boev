@@ -3,7 +3,7 @@
 
 namespace Conventers
 {
-    IConventerPtr CreateMute :: create_conventer(int first, int second){
-        return std::make_shared<MuteConventer>(first, second);
+    IConventerPtr CreateMute :: create_conventer(std::vector<int> params){
+        return std::make_shared<MuteConventer>(params);
     }
 }

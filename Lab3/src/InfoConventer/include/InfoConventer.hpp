@@ -8,7 +8,7 @@ namespace InfoConventer{
 struct InfoConventer
 {
     std::string name;
-    std::vector<std::string> data;
+    std::vector<int> data2;
     
     InfoConventer() = default;
     InfoConventer(std::vector<std::string> input);

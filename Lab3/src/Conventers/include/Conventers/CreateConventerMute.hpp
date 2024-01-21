@@ -8,6 +8,6 @@ class CreateMute : public ICreateConventer
 {
 public:
     CreateMute() = default;
-    IConventerPtr create_conventer(int first, int second) override;
+    IConventerPtr create_conventer(std::vector<int> params) override;
 };
 }

@@ -5,9 +5,9 @@ namespace Conventers
 {
 MixConventer :: MixConventer() = default;
 
-MixConventer :: MixConventer(int first, int second){
-    input_digit_ = first;
-    time_begin_ = second;
+MixConventer :: MixConventer(std::vector<int> params){
+    input_digit_ = params[0];
+    time_begin_ = params[1];
 }
 void MixConventer :: Do(int now_second, OneSecond :: OneSecond& second, std::deque<std::shared_ptr<Stream :: Stream>> input_files){
         if((now_second >= time_begin_) && (input_digit_ < input_files.size())){

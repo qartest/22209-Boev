@@ -4,6 +4,7 @@ add_library(${LIBRARY_NAME} STATIC)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC include)
 
+
 target_link_libraries(${LIBRARY_NAME} PUBLIC ConventersLib)
 
 target_sources(${LIBRARY_NAME}

@@ -26,11 +26,13 @@ InfoConventer :: InfoConventer(std::vector<std::string> input){
                 input[1] = input[1].substr(1);
                 check_mix = true;
                 for(int i = 1; i < 3; ++i){
-                    if(!is_digit(input[i])){
+                    if(!is_digit(input[1])){
                         check_mix = false;
                     }
-                    data.push_back(input[i]);
-                }
+                    else{
+                        data2.push_back(std::stoi(input[i]));
+                    }
+                }         
             }
             if(check_mix){
                 name = "mix";
@@ -40,60 +42,42 @@ InfoConventer :: InfoConventer(std::vector<std::string> input){
             }
             
         }
-        else if(input[0] == "mute"){
-            bool check_mute = true;
-            for(int i = 1; i < 3; ++i){
-                if(!is_digit(input[i])){
-                    check_mute = false;
-                }
-                data.push_back(input[i]);
-            }
-            if(check_mute){
-                name = "mute";
-            }
-            else{
-                name = "bad";
-            }
-        }
-        else if (input[0] == "bass"){
-            bool check_bass = true;
-            for(int i = 1; i < 3; ++i){
-                if(!is_digit(input[i])){
-                    check_bass = false;
-                }
-                data.push_back(input[i]);
-            }
-            if(check_bass){
-                name = "bass";
-            }
-            else{
-                name = "bad";
-            }            
-        }
         else{
-            name = "bad";
+            name = input[0];
+            bool check_digit = true;
+            for(int i = 1; i < 3; ++i){
+                if(!is_digit(input[i])){
+                    check_digit = false;
+                }
+                else{
+                    data2.push_back(std::stoi(input[i]));
+                }
+            }
+            if(!check_digit){
+                name = "bad";
+            }
         }
     }
 }
 
 InfoConventer :: InfoConventer(const InfoConventer& pb){
-    data = pb.data;
+    data2 = pb.data2;
     name = pb.name;
 }
 
 InfoConventer :: InfoConventer(InfoConventer&& pb){
-    data = std::move(pb.data);
+    data2 = std::move(pb.data2);
     name = std::move(pb.name);
 }
 
 InfoConventer& InfoConventer::operator=(const InfoConventer& pb){
-    data = pb.data;
+    data2 = pb.data2;
     name = pb.name;
     return *this;
 }
 
 InfoConventer& InfoConventer::operator=(InfoConventer&& pb){
-    data = std::move(pb.data);
+    data2 = std::move(pb.data2);
     name = std::move(pb.name);
     return *this;
 }

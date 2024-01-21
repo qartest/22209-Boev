@@ -3,9 +3,9 @@
 
 namespace Conventers
 {
-MuteConventer :: MuteConventer(int first, int second){
-    time_begin_ = first;
-    time_end_ = second;
+MuteConventer :: MuteConventer(std::vector<int> params){
+    time_begin_ = params[0];
+    time_end_ = params[1];
 }
 MuteConventer :: MuteConventer() = default;
 

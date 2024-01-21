@@ -1,5 +1,6 @@
 #include <Conventers/IConventer.hpp>
 
+
 namespace Conventers
 {
 class BassConventer : public IConventer
@@ -10,6 +11,6 @@ private:
 public:
     void Do(int now_second, OneSecond :: OneSecond& second, std::deque<std::shared_ptr<Stream :: Stream>> input_files) override;
     BassConventer();
-    BassConventer(int first, int second);
+    BassConventer(std::vector<int> params);
 };
 }
