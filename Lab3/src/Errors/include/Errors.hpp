@@ -95,3 +95,10 @@ public:
     NotWay();
     int what_index();
 };
+
+class ProgrammProblem final : public CalledFunctionError
+{
+public:
+    ProgrammProblem();
+    int what_index();
+};

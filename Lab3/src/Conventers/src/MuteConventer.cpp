@@ -1,9 +1,13 @@
 #include "MuteConventer.hpp"
+#include <Errors.hpp>
 #include <iostream>
 
 namespace Conventers
 {
 MuteConventer :: MuteConventer(std::vector<int> params){
+    if(params.size() < 2){
+        throw ProgrammProblem();
+    }
     time_begin_ = params[0];
     time_end_ = params[1];
 }

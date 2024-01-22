@@ -69,8 +69,7 @@ void Controller :: ConfigParser(std::shared_ptr<Stream :: Stream> input){
         while(std::getline(ss, tmp, ' ')){
             words.push_back(tmp);
         }
-        InfoConventer::InfoConventer coc(words);
-        all_info.push_back(coc);
+        all_info.push_back(InfoConventer::InfoConventer(words));
     }
     
     Factory::IFactoryPtr factory  = Factory::create_factory();
@@ -78,11 +77,16 @@ void Controller :: ConfigParser(std::shared_ptr<Stream :: Stream> input){
     SetUpFactory(factory);
 
     for(int i = 0; i < all_info.size(); ++i){
-        auto conventer = factory -> create(all_info[i].name, all_info[i].data2);
-        if(conventer == nullptr){
-            throw ConfigProblem();
+        try{
+            auto conventer = factory -> create(all_info[i].name, all_info[i].data2);
+            if(conventer == nullptr){
+                throw ConfigProblem();
+            }
+            conventers.push_back(conventer);
         }
-        conventers.push_back(conventer);
+        catch(ProgrammProblem& e){
+             throw e;
+        }
     }
 }
 
@@ -93,7 +97,10 @@ int Controller :: MainBody(){
     catch(ConfigProblem& e){
         return e.what_index();
     }
-    
+    catch(ProgrammProblem& e){
+        return e.what_index();
+    }
+
     all_ways2.pop_front();
 
     wav_hdr input_info = (*all_ways2.begin()) -> WriteInfo(*(++all_ways2.begin()));

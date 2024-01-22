@@ -4,6 +4,6 @@
 namespace Conventers
 {
     IConventerPtr CreateMute :: create_conventer(std::vector<int> params){
-        return std::make_shared<MuteConventer>(params);
+        return std::make_shared<MuteConventer>(std::move(params));
     }
 }

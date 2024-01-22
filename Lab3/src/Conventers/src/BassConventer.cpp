@@ -1,4 +1,5 @@
 #include "BassConventer.hpp"
+#include <Errors.hpp>
 #include <iostream>
 #include <variant>
 
@@ -7,6 +8,9 @@ namespace Conventers
 BassConventer :: BassConventer() = default;
 
 BassConventer :: BassConventer(std::vector<int> params){
+    if(params.size() < 2){
+        throw ProgrammProblem();
+    }
     time_begin_ = params[0];
     time_end_ = params[1];
 }
@@ -22,6 +26,5 @@ void BassConventer :: Do(int now_second, OneSecond :: OneSecond& second, std::de
 
         second.SetSecond(new_second);
     }
-
 }
 }

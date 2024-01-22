@@ -76,3 +76,11 @@ int NotWay :: what_index(){
     return -2;
 }
 
+ProgrammProblem :: ProgrammProblem(){
+    cout<< "Program have a problem" << endl;
+}
+
+int ProgrammProblem :: what_index(){
+    return -3;
+}
+

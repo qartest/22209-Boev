@@ -1,4 +1,5 @@
 #include "MixConventer.hpp"
+#include <Errors.hpp>
 #include <iostream>
 
 namespace Conventers
@@ -6,6 +7,9 @@ namespace Conventers
 MixConventer :: MixConventer() = default;
 
 MixConventer :: MixConventer(std::vector<int> params){
+    if(params.size() < 2){
+        throw ProgrammProblem();
+    }
     input_digit_ = params[0];
     time_begin_ = params[1];
 }

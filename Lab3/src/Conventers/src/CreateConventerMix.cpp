@@ -5,6 +5,6 @@
 namespace Conventers
 {
     IConventerPtr CreateMix :: create_conventer(std::vector<int> params){
-        return std::make_shared<MixConventer>( params);
+        return std::make_shared<MixConventer>(std::move(params));
     }
 }
