@@ -18,7 +18,7 @@ public class Game implements Runnable{
 
     public final static int TILES_DEFAULT_WIDTH = 60;
     public final static int TILES_DEFAULT_HEIGHT = 100;
-    public final static float SCALE = 1f;
+    public final static float SCALE = 1.0f;
     public final static int TILES_IN_WIDTH = 11;
     public final static int TILES_IN_HEIGHT = 10;
 

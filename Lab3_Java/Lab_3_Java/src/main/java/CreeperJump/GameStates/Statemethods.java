@@ -8,7 +8,6 @@ public interface Statemethods {
 
     public void update();
 
-
     public void mouseClicked(MouseEvent e);
 
     public void mouseReleased(MouseEvent e);

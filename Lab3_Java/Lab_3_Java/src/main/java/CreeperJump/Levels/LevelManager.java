@@ -3,7 +3,6 @@ package CreeperJump.Levels;
 import CreeperJump.Game.Game;
 import CreeperJump.GameObjects.CobbleStep;
 import CreeperJump.GameObjects.GameObjects;
-import CreeperJump.utilz.LoadSave;
 
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class LevelManager {
 
     private void GenerateNewLevel(){
         for(int i = 0; i < 1000 / 200; ++i){
-            int randomNumber = 4 + random.nextInt(5);
+            int randomNumber = 1 + random.nextInt(5);
             for(int j = 0; j < randomNumber; ++j){
                 int randomX = random.nextInt( Game.GAME_WIDTH);
                 int randomY = i * 200 + random.nextInt(200);
