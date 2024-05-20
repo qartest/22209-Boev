@@ -30,8 +30,7 @@ public class Playing extends State implements Statemethods{
     }
     private void initClasses(){
         player = new Player(PLAYER_START_X, PLAYER_START_Y, (int) (PLAYER_WIDTH_DEFAULT * SCALE), (int) (PLAYER_HEIGHT_DEFAULT * SCALE));
-        HelpsMethods.CreateLevel(steps);
-        levelManager = new LevelManager(steps, (int)minYCoord);
+        levelManager = new LevelManager(steps);
     }
 
     @Override
@@ -112,16 +111,15 @@ public class Playing extends State implements Statemethods{
             }
         } else if((player.getAirSpeed() == 0) && (!player.getPlayingJump())){
             player.JumpSpeed();
+            player.PlusJumpBoost();
             player.setWaitJump(false);
-
+            levelManager.DeleteSteps();
         } else if (player.getWaitJump()){
             player.AntiGravity();
         }else if(player.getAirSpeed() < 0){
             if(minYCoord > player.getHitBox().getY()){
                 minYCoord = player.getHitBox().getY();
-
                 GameScore = 500 - (int)minYCoord;
-
             }
         }
 

@@ -27,6 +27,7 @@ public class Constants {
     public static class Physics{
         public static final float GRAVITY = 0.05f * Game.SCALE;
         public static final float JUMP_SPEED = -7.5f * Game.SCALE;
+        public static final float JUMP_BOOST = -5f * Game.SCALE;
 
         public static final float LEFT_SPEED = -3.0f * Game.SCALE;
         public static final float RIGHT_SPEED = 3.0f * Game.SCALE;
@@ -88,6 +89,7 @@ public class Constants {
                     return B_WIDTH_DEFAULT_QUIT;
             }
         }
+
         public static int GetWidth(int button){
 
             switch (button){

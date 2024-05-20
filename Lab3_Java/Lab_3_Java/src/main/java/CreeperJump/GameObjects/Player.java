@@ -19,6 +19,8 @@ public class Player extends GameObjects{
     private boolean playing_jump = false;
     private boolean wait_animation_jump = false;
 
+    private boolean jump_boost = false;
+
     private boolean divideCreeper = false;
 
     private float airSpeed = 1.0f;
@@ -29,7 +31,7 @@ public class Player extends GameObjects{
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         initHitbox(x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
-
+        health = 10;
     }
 
     private void setAnimation(){
@@ -130,6 +132,8 @@ public class Player extends GameObjects{
     public void JumpSpeed(){
         airSpeed = 0;
         airSpeed += JUMP_SPEED;
+
+
         System.out.println("Jump");
     }
     public void ZeroSpeed(){
@@ -141,6 +145,12 @@ public class Player extends GameObjects{
         if(divideCreeper)
             secondHitBox.y += airSpeed;
 
+    }
+
+    public void PlusJumpBoost(){
+        if(jump_boost)
+            airSpeed += JUMP_BOOST;
+        jump_boost = false;
     }
 
     public float getAirSpeed(){
@@ -174,4 +184,9 @@ public class Player extends GameObjects{
     public int getAniIndex(){
         return aniIndex;
     }
+
+    public void setJumpBoost(boolean ty){
+        jump_boost = ty;
+    }
+
 }

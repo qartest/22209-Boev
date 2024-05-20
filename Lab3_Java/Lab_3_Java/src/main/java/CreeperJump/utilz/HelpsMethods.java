@@ -3,6 +3,7 @@ package CreeperJump.utilz;
 import CreeperJump.Game.Game;
 import CreeperJump.GameObjects.CobbleStep;
 import CreeperJump.GameObjects.GameObjects;
+import CreeperJump.GameObjects.JumpStep;
 import CreeperJump.GameObjects.Player;
 
 import java.awt.geom.Rectangle2D;
@@ -24,13 +25,19 @@ public class HelpsMethods {
 
 
             if((step_begin <= player_begin_X)  && (step_end  >= player_begin_X)){
-                if((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) >= -4) && ((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) <= 1))){
+                if((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) >= -5) && ((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) <= 1))){
+                    step.minusHealth();
+                    if(step instanceof JumpStep)
+                        player.setJumpBoost(true);
                     return true;
                 }
             }
 
             if((step_begin <= player_end_X)  && (step_end  >= player_end_X)){
-                if((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) >= -4) && ((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) <= 1))){
+                if((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) >= -5) && ((step.getHitBox().getY() - (player.getHitBox().getY() + player.getHitBox().getHeight()) <= 1))){
+                    step.minusHealth();
+                    if(step instanceof JumpStep)
+                        player.setJumpBoost(true);
                     return true;
                 }
             }
@@ -39,7 +46,10 @@ public class HelpsMethods {
         if(player.getDivideCreeper()){
             for(GameObjects step : stepsOnTheLevel){
                 if(Math.abs(step.getHitBox().getX()  - player.getSecondHitBox().getX()) <= ( PLAYER_WIDTH)) // они умеют одинаковый размер
-                    if((step.getHitBox().getY() - (player.getSecondHitBox().getY() + player.getSecondHitBox().getHeight()) >= -3) && ((step.getHitBox().getY() - (player.getSecondHitBox().getY() + player.getSecondHitBox().getHeight()) <= 0))){
+                    if((step.getHitBox().getY() - (player.getSecondHitBox().getY() + player.getSecondHitBox().getHeight()) >= -4) && ((step.getHitBox().getY() - (player.getSecondHitBox().getY() + player.getSecondHitBox().getHeight()) <= 1))){
+                        step.minusHealth();
+                        if(step instanceof JumpStep)
+                            player.setJumpBoost(true);
                         return true;
                     }
             }
@@ -47,12 +57,7 @@ public class HelpsMethods {
         return false;
     }
 
-    public static void CreateLevel(ArrayList<GameObjects> steps){
-        for(int i = 0; i <= Game.TILES_IN_WIDTH; ++i){
-            steps.add(new CobbleStep( i * STEP_WIDTH, 1000,  STEP_WIDTH, STEP_HEIGHT));
-        }
 
-    }
 
 
 }

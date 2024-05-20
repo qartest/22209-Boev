@@ -1,10 +1,10 @@
 package CreeperJump.GameObjects;
 
 public class CobbleStep extends GameObjects{
-    private int heals = 10;
 
     public CobbleStep(float x, float y, int width, int height) {
         super(x, y, width, height);
         initHitbox(x, y, width, height);
+        health = 9999;
     }
 }

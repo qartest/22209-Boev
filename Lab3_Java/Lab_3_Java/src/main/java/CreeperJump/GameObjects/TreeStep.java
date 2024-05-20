@@ -1,0 +1,9 @@
+package CreeperJump.GameObjects;
+
+public class TreeStep extends GameObjects{
+    public TreeStep(float x, float y, int width, int height) {
+        super(x, y, width, height);
+        initHitbox(x, y, width, height);
+        health = 1;
+    }
+}

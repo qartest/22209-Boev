@@ -14,7 +14,7 @@ public class Game implements Runnable{
 
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
-    public static boolean resetGame = true;
+    public static boolean resetGame = false;
 
     public final static int TILES_DEFAULT_WIDTH = 60;
     public final static int TILES_DEFAULT_HEIGHT = 100;
@@ -39,6 +39,7 @@ public class Game implements Runnable{
 
     private void initClasses(){
         menu = new CreeperJump.GameStates.Menu(this);
+        ResetGame();
     }
 
     private void startGameLoop(){

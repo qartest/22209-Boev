@@ -1,7 +1,6 @@
 package CreeperJump.Game;
 
-import CreeperJump.GameObjects.GameObjects;
-import CreeperJump.GameObjects.Player;
+import CreeperJump.GameObjects.*;
 import CreeperJump.UI.MenuButton;
 import CreeperJump.utilz.LoadSave;
 
@@ -28,10 +27,21 @@ public class Render {
     }
 
     public void renderSteps(Graphics g, ArrayList<GameObjects> obj, int GameScore){
-        g.setColor(Color.black);
+
         for(GameObjects ob : obj){
+            if(ob instanceof CobbleStep){
+                g.setColor(Color.black);
+                g.fillRect((int)ob.getHitBox().x, (int)ob.getHitBox().y + GameScore, (int)ob.getHitBox().width, (int)ob.getHitBox().height);
+            } else if(ob instanceof TreeStep){
+                g.setColor(Color.GRAY);
+                g.fillRect((int)ob.getHitBox().x, (int)ob.getHitBox().y + GameScore, (int)ob.getHitBox().width, (int)ob.getHitBox().height);
+            }
+            else if (ob instanceof JumpStep){
+                g.setColor(Color.RED);
+                g.fillRect((int)ob.getHitBox().x, (int)ob.getHitBox().y + GameScore, (int)ob.getHitBox().width, (int)ob.getHitBox().height);
+            }
 //            g.drawImage(ImageCoobleSteps, (int)ob.getHitBox().x, (int)ob.getHitBox().y, (int)ob.getHitBox().width, (int)ob.getHitBox().height, null);
-            g.fillRect((int)ob.getHitBox().x, (int)ob.getHitBox().y + GameScore, (int)ob.getHitBox().width, (int)ob.getHitBox().height);
+
         }
     }
 

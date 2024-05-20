@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public abstract class GameObjects {
+    protected int health;
     protected float x, y;
     protected int width, height;
     protected Rectangle2D.Float hitBox;
@@ -36,5 +37,13 @@ public abstract class GameObjects {
 
     public Rectangle2D.Float getSecondHitBox(){
         return secondHitBox;
+    }
+
+    public int getHealth(){
+        return health;
+    }
+
+    public void minusHealth(){
+        health -= 1;
     }
 }
