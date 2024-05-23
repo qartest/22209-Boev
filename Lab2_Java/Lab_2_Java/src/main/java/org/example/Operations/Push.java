@@ -3,13 +3,14 @@ package org.example.Operations;
 import org.example.Context.Context;
 import org.example.Exceptions.EmptyStack;
 import org.example.Exceptions.LittleData;
+import org.example.Exceptions.MyExceptions;
 import org.example.Exceptions.ProblemWithDigit;
 
 import java.math.BigDecimal;
 
 public class Push implements Operation {
     @Override
-    public void Do(Context context, String[] data) {
+    public void Do(Context context, String[] data)  throws MyExceptions {
         if(data.length < 1){
             throw new LittleData();
         }

@@ -1,6 +1,8 @@
 package org.example.Exceptions;
 
-public abstract class MyExceptions extends RuntimeException{
+import java.io.IOException;
+
+public abstract class MyExceptions extends IOException {
     public abstract void logMessage();
 
 }

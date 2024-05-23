@@ -1,6 +1,7 @@
 package org.example.Context;
 
 import org.example.Exceptions.EmptyStack;
+import org.example.Exceptions.MyExceptions;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,14 +39,14 @@ public class Context {
         }
     }
 
-    public BigDecimal PopDigit(){
+    public BigDecimal PopDigit() throws MyExceptions {
         if(stack_digit.isEmpty()){
             throw new EmptyStack();
         }
         return stack_digit.pop();
     }
 
-    public BigDecimal ShowDigit(){
+    public BigDecimal ShowDigit() throws MyExceptions{
         if(stack_digit.isEmpty()){
             throw new EmptyStack();
         }
