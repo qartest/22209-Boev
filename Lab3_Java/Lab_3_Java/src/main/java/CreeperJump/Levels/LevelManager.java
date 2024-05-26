@@ -42,8 +42,8 @@ public class LevelManager {
     }
 
     private void GenerateMiddleLevel() {
-
-            for(int i = 0; i < 2000 / 200; ++i){
+            int size = 2000 / 200;
+            for(int i = 0; i < size; ++i){
                 int randomNumber = random.nextInt(2);
                 for(int j = 0; j < randomNumber; ++j){
                     int randomX = random.nextInt( Game.GAME_WIDTH);
@@ -71,8 +71,8 @@ public class LevelManager {
     }
 
     private void GenerateHightLevel(){
-
-        for(int i = 0; i < 2000 / 200; ++i){
+        int size = 2000 / 200;
+        for(int i = 0; i < size; ++i){
             int randomTreeStep = 1 + random.nextInt(3);
             for(int j = 0; j < randomTreeStep; ++j){
                 int randomX = random.nextInt(Game.GAME_WIDTH);
@@ -84,30 +84,9 @@ public class LevelManager {
 
     }
 
-
-    private void GenerateNewLevel(){
-        for(int i = 0; i < 2000 / 200; ++i){
-            int randomNumber = 1 + random.nextInt(5);
-            for(int j = 0; j < randomNumber; ++j){
-                int randomX = random.nextInt( Game.GAME_WIDTH);
-                int randomY = i * 200 + random.nextInt(200);
-                int coordY = minYGenerate - randomY;
-
-
-                if(j == 3){
-                    steps.add(new TreeStep(randomX, coordY, STEP_WIDTH,STEP_HEIGHT));
-                }
-                else if(j == 2){
-                    steps.add(new JumpStep(randomX, coordY, STEP_WIDTH,STEP_HEIGHT));
-                }else{
-                    steps.add(new CobbleStep(randomX, coordY, STEP_WIDTH,STEP_HEIGHT));
-                }
-
-            }
-        }
-    }
     private void GenerateEazyLevel(){
-        for(int i = 0; i < 2000 / 200; ++i){
+        int size = 2000 / 200;
+        for(int i = 0; i < size; ++i){
             int randomNumber = 1 + random.nextInt(3);
             for(int j = 0; j < randomNumber; ++j){
                 int randomX = random.nextInt( Game.GAME_WIDTH);
@@ -149,7 +128,8 @@ public class LevelManager {
     }
 
     public void CreateBegin(){
-        for(int i = 0; i < 1000/200; i++){
+        int size = 1000/200;
+        for(int i = 0; i < size; i++){
             int randomNumber = 4 + random.nextInt(2);
             for(int j = 0; j < randomNumber; ++j){
                 int randomX;
