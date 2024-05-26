@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 public class MyTest {
     public static final String commands = "#Comment\nPRINT\nPOP\n* 10\n+ 10\n- 10\n/ 10\nSQRT\nDEFINE A 10\nPUSH A\nPUSH 10\n" +
             "+ \nPUSH 10\n* \n-\nDEFINE 10 10\nCOC\nPRINT\nSQRT\nPUSH CKC\n+ A 10 A\nPOP\n+ CKC\nDEFINE AF AF\nPUSH 10\n* A 10\n/ A 10\n- A 10\n-\n" +
-            "PUSH 10\n-\nPUSH 10\n/\n/ 0\n+ 10 KIK\n- 10 KIK\n* 10 KIK\n/ 10 KIK\nPUSH 0\nPUSH 10\n/\nPUSH\nEXIT";
+            "PUSH 10\n-\nPUSH 10\n/\n/ 0\n+ 10 KIK\n- 10 KIK\n* 10 KIK\n/ 10 KIK\nPUSH 0\nPUSH 10\n/\nPUSH\nDEFINE\nEXIT";
     public static final String exit = "EXIT";
     @BeforeAll
     static void setup() {

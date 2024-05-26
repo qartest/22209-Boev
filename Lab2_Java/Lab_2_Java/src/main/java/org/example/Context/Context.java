@@ -24,32 +24,18 @@ public class Context {
     }
 
     public void PushDigit(BigDecimal digit) {
-        try{
             stack_digit.push(digit);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void DefineDigit(String name, BigDecimal digit){
-        try{
-            define_cash.put(name, digit);
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
+        define_cash.put(name, digit);
     }
 
-    public BigDecimal PopDigit() throws MyExceptions {
-        if(stack_digit.isEmpty()){
-            throw new EmptyStack();
-        }
+    public BigDecimal PopDigit() {
         return stack_digit.pop();
     }
 
-    public BigDecimal ShowDigit() throws MyExceptions{
-        if(stack_digit.isEmpty()){
-            throw new EmptyStack();
-        }
+    public BigDecimal ShowDigit() {
         return stack_digit.peek();
     }
 
