@@ -73,7 +73,7 @@ public class LevelManager {
     private void GenerateHightLevel(){
         int size = 2000 / 200;
         for(int i = 0; i < size; ++i){
-            int randomTreeStep = 1 + random.nextInt(3);
+            int randomTreeStep = 1 + random.nextInt(2);
             for(int j = 0; j < randomTreeStep; ++j){
                 int randomX = random.nextInt(Game.GAME_WIDTH);
                 int randomY = i * 200 + random.nextInt(200);
