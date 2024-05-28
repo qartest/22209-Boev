@@ -27,7 +27,9 @@ public class Input implements AutoCloseable {
             mode = Mode.ONLINE;
         }
     }
-
+    public void giveReader(BufferedReader reader){
+        this.reader = reader;
+    }
     @Override
     public void close() throws Exception {
         if(reader != null){

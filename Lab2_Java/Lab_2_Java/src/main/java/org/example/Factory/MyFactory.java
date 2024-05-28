@@ -10,16 +10,16 @@ import java.util.Properties;
 
 public class MyFactory implements Factory {
     private final Map<String, Class<? extends Operation>> data = new HashMap<>();
-    public MyFactory(){
+    public MyFactory(String name){
         try {
-            loadConfig();
+            loadConfig(name);
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void loadConfig() throws IOException, ClassNotFoundException {
-        try(InputStream inputStream = MyFactory.class.getResourceAsStream("/Commands.properties")){
+    private void loadConfig(String name) throws IOException, ClassNotFoundException {
+        try(InputStream inputStream = MyFactory.class.getResourceAsStream(name)){
             Properties properties = new Properties();
             properties.load(inputStream);
 

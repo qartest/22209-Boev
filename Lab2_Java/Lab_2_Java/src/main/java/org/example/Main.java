@@ -12,9 +12,10 @@ import org.example.Operations.Operation;
 import java.io.IOException;
 
 public class Main {
+    static public String name = "/Commands.properties";
     public static void main(String[] args) throws InstantiationException, IllegalAccessException {
         ///Контекст хранит элементы массива и переименованные элементы
-        MyFactory factory = new MyFactory();
+        MyFactory factory = new MyFactory(name);
         Context context = new Context();
 
 
@@ -22,7 +23,6 @@ public class Main {
             Interpreter interpreter = new Interpreter(context, input, factory);
             interpreter.run();
         } catch (Exception e) {
-            throw new RuntimeException(e);
         }
 
 
