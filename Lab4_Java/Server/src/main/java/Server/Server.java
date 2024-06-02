@@ -47,7 +47,7 @@ public class Server {
     }
 
     public int send(){
-
+        int a;
     }
 
     public
